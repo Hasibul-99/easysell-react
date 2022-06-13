@@ -1,0 +1,34 @@
+.dashboard-overview {
+    .top-item {
+        width: 12rem;
+
+        .content-icon {
+            position: relative;
+            span {
+                position: absolute;
+                left: 31.21%;
+                right: 76.53%;
+                top: 22.66%;
+                bottom: 72.75%;
+            }
+        }
+
+        .revenue-status {
+            background: #48A847;
+            padding: 0px 7px;
+            border-radius: 50%;
+            margin-left: 0.4rem;
+        }
+    }
+}
+
+.main-server-dashboard {
+    .online-user {
+        position: relative;
+        span {
+            position: absolute;
+            top: 20px;
+            left: 30%;
+        }
+    }
+}

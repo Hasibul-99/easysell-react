@@ -10,3 +10,7 @@ export const CHANGE_PASSWORD = "/auth/change-password";
 export const USER_INFO = "/reseller/me"
 
 
+export const USER_VERIFY = "user_verify/";
+
+
+

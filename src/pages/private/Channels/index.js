@@ -4,7 +4,7 @@ import { Table, Button, Card, Checkbox, Row, Col, Select, Input, Form, Modal } f
 import { AudioOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { getData, deleteData, postData } from '../../../scripts/api-service';
-import { RESELLER_LIST_LINE, RESELLER_DELETE_LINK, RESELLER_BANNED_LINK, RESELLER_EXTEND_LINE, RESELLER_SEARCH_LINK } from '../../../scripts/api';
+// import { RESELLER_LIST_LINE, RESELLER_DELETE_LINK, RESELLER_BANNED_LINK, RESELLER_EXTEND_LINE, RESELLER_SEARCH_LINK } from '../../../scripts/api';
 import { SearchOutlined, ExclamationCircleOutlined, RedoOutlined } from '@ant-design/icons';
 import { authContext } from "../../../context/AuthContext";
 
@@ -136,12 +136,12 @@ export default function Channels() {
       okType: 'danger',
       cancelText: 'No',
       async onOk() {
-        let res = await deleteData(RESELLER_DELETE_LINK + row.user_id + '/' + row.password);
+        // let res = await deleteData(RESELLER_DELETE_LINK + row.user_id + '/' + row.password);
 
-        if (res) {
-          links.splice(row.idx, 1);
-          setLinks([...links]);
-        }
+        // if (res) {
+        //   links.splice(row.idx, 1);
+        //   setLinks([...links]);
+        // }
       },
       onCancel() {
         console.log('Cancel');
@@ -154,25 +154,25 @@ export default function Channels() {
     };
 
     const getLinks = async () => {
-      let res = await getData(RESELLER_LIST_LINE);
+      // let res = await getData(RESELLER_LIST_LINE);
 
-      if (res) {
-        let masterData = res?.data;
-        setLinks(masterData || [])
-      }
+      // if (res) {
+      //   let masterData = res?.data;
+      //   setLinks(masterData || [])
+      // }
     }
 
     const bandLinkHandeler = async () => {
-      let res = await getData(RESELLER_BANNED_LINK + actionLInk.user_id + '/' + actionLInk.password);
+      // let res = await getData(RESELLER_BANNED_LINK + actionLInk.user_id + '/' + actionLInk.password);
 
-      if (res) {
-        links[actionLInk.idx] = res.data;
+      // if (res) {
+      //   links[actionLInk.idx] = res.data;
 
-        setIsModalBanned(false);
-        setActionLink(null);
-        success();
-        setLinks([...links]);
-      }
+      //   setIsModalBanned(false);
+      //   setActionLink(null);
+      //   success();
+      //   setLinks([...links]);
+      // }
     }
 
     const success = () => {
@@ -182,27 +182,27 @@ export default function Channels() {
     };
 
     const handelExtend = async (values) => {
-      let extendData = values;
-      extendData.user_id = actionLInk.user_id;
-      extendData.password = actionLInk.password;
+      // let extendData = values;
+      // extendData.user_id = actionLInk.user_id;
+      // extendData.password = actionLInk.password;
 
-      let res = await postData(RESELLER_EXTEND_LINE, extendData);
+      // let res = await postData(RESELLER_EXTEND_LINE, extendData);
 
-      if (res) {
-        links[actionLInk.idx] = res.data;
+      // if (res) {
+      //   links[actionLInk.idx] = res.data;
 
-        setActionLink(null); 
-        setIsModalExtend(false);
-        setLinks([...links]);
-      }
+      //   setActionLink(null); 
+      //   setIsModalExtend(false);
+      //   setLinks([...links]);
+      // }
     } 
     
     const onFinish = async (values) => {
-      let res = await postData(RESELLER_SEARCH_LINK, values);
-      if (res) {
-        let masterData = res?.data;
-        setLinks(masterData)
-      }
+      // let res = await postData(RESELLER_SEARCH_LINK, values);
+      // if (res) {
+      //   let masterData = res?.data;
+      //   setLinks(masterData)
+      // }
     };
 
     const refressCredit = () => {

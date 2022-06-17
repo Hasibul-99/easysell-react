@@ -3,7 +3,7 @@ import { Form, Input, Button, Checkbox } from 'antd';
 import { postData } from '../../scripts/api-service';
 import { LOGIN } from '../../scripts/api';
 import Cookies from "js-cookie";
-import image from "../../assets/images/OPTV ash 1.png"
+import image from "../../assets/images/logo.png"
 import loginImage from "../../assets/images/Mobile login-pana 1.png"
 import { Link } from 'react-router-dom';
 
@@ -44,8 +44,8 @@ export default function Register() {
                                         autoComplete="off"
                                     >
                                         <Form.Item
-                                            label="Username"
-                                            name="userId"
+                                            label="Name"
+                                            name="name"
                                             rules={[{ required: true, message: 'Please input your username!' }]}
                                         >
                                             <Input size="large" />
@@ -60,6 +60,14 @@ export default function Register() {
                                         </Form.Item>
 
                                         <Form.Item
+                                            label="Number"
+                                            name="number"
+                                            rules={[{ required: true, message: 'Please input your Number!' }]}
+                                        >
+                                            <Input size="large" />
+                                        </Form.Item>
+
+                                        <Form.Item
                                             label="Password"
                                             name="password"
                                             rules={[{ required: true, message: 'Please input your password!' }]}
@@ -67,19 +75,21 @@ export default function Register() {
                                             <Input.Password size="large" />
                                         </Form.Item>
 
-                                        <div className='row'>
-                                            <div className='col-8'>
-                                                <Form.Item
-                                                    name="remember"
-                                                    valuePropName="checked"
-                                                >
-                                                    <Checkbox>Remember me</Checkbox>
-                                                </Form.Item>
-                                            </div>
-                                            {/* <div className='col-6' style={{ textAlign: "right", paddingTop: "6px" }}>
-                                                <Link to="">Forgot Password</Link>
-                                            </div> */}
-                                        </div>
+                                        <Form.Item
+                                            label="Again Enter Password"
+                                            name="confi_password"
+                                            rules={[{ required: true, message: 'Please input your password!' }]}
+                                        >
+                                            <Input.Password size="large" />
+                                        </Form.Item>
+
+                                        <Form.Item
+                                            label="Serial Key"
+                                            name="serialkey"
+                                            rules={[{ required: true, message: 'Please input your Number!' }]}
+                                        >
+                                            <Input size="large" />
+                                        </Form.Item>
 
                                         <Form.Item>
                                             <Button className='b-button' type="primary" htmlType="submit" size="large" style={{ width: '100%' }}>
@@ -89,7 +99,7 @@ export default function Register() {
                                     </Form>
 
                                     <div className='text-center'>
-                                        Don't have an account? <Link to="">Register</Link>
+                                        Have an account? <Link to="/auth/login">Login</Link>
                                     </div>
                                 </div>
                             </div>

@@ -1,18 +1,26 @@
 import React from 'react';
 import { Form, Input, Button, Checkbox } from 'antd';
-import { postData } from '../../scripts/api-service';
-import { LOGIN } from '../../scripts/api';
+import { getData, postData } from '../../scripts/api-service';
+import { USER_VERIFY } from '../../scripts/api';
 import Cookies from "js-cookie";
-import image from "../../assets/images/OPTV ash 1.png"
+import image from "../../assets/images/logo.png"
 import loginImage from "../../assets/images/Forgot password-rafiki 1.png"
 import { Link } from 'react-router-dom';
 
 export default function SignIn() {
   const onFinish = async (values) => {
-    let res = await postData(LOGIN, values, 'no_token');
+    // let res = await postData(LOGIN, values, 'no_token');
+    // if (res) {
+    //   Cookies.set("AOSToken", res.data.token, { expires: 1 });
+    //   window.location = "/";
+    // }
+
+    console.log("val", values);
+    let res = await getData(USER_VERIFY + values.userId + '/' + values.password);
+
+    console.log("res", res);
     if (res) {
-      Cookies.set("AOSToken", res.data.token, { expires: 1 });
-      window.location = "/";
+
     }
   };
 
@@ -44,7 +52,7 @@ export default function SignIn() {
                     autoComplete="off"
                   >
                     <Form.Item
-                      label="Username"
+                      label="Number"
                       name="userId"
                       rules={[{ required: true, message: 'Please input your username!' }]}
                     >
@@ -59,20 +67,6 @@ export default function SignIn() {
                       <Input.Password size="large" />
                     </Form.Item>
 
-                    <div className='row'>
-                      <div className='col-6'>
-                        <Form.Item
-                          name="remember"
-                          valuePropName="checked"
-                        >
-                          <Checkbox>Remember me</Checkbox>
-                        </Form.Item>
-                      </div>
-                      <div className='col-6' style={{textAlign: "right", paddingTop: "6px"}}>
-                        <Link to="">Forgot Password</Link>
-                      </div>
-                    </div>
-
                     <Form.Item>
                       <Button className='b-button' type="primary" htmlType="submit" size="large" style={{ width: '100%' }}>
                         Submit
@@ -81,7 +75,7 @@ export default function SignIn() {
                   </Form>
 
                   <div className='text-center'>
-                    Don't have an account? <Link to="">Register</Link>
+                    Don't have an account? <Link to="/auth/register">Register</Link>
                   </div>
                 </div>
               </div>

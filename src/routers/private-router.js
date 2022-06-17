@@ -5,6 +5,7 @@ import Page404 from "../pages/private/404";
 import AddLink from "../pages/private/Channels/add-link";
 import CodeCreate from "../pages/private/codes/code-create";
 import Cards from "../pages/private/codes/index";
+import ReadyProducts from "../pages/private/Ready-Products";
 
 const PrivateRoutes = [
     {
@@ -15,9 +16,9 @@ const PrivateRoutes = [
         exact: true
     },
     {
-        path: "add-link",
-        name: "Dashboard",
-        component: AddLink,
+        path: "ready-product",
+        name: "Ready Products",
+        component: ReadyProducts,
         layout: "/",
         exact: true
     },

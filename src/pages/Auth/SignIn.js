@@ -9,18 +9,11 @@ import { Link } from 'react-router-dom';
 
 export default function SignIn() {
   const onFinish = async (values) => {
-    // let res = await postData(LOGIN, values, 'no_token');
-    // if (res) {
-    //   Cookies.set("AOSToken", res.data.token, { expires: 1 });
-    //   window.location = "/";
-    // }
-
-    console.log("val", values);
     let res = await getData(USER_VERIFY + values.userId + '/' + values.password);
 
-    console.log("res", res);
-    if (res) {
-
+    if (res?.data?.response) {
+      Cookies.set("AOSToken", JSON.stringify({userId: values.userId, password: values.password}), { expires: 1 });
+      window.location = "/";
     }
   };
 

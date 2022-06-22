@@ -14,9 +14,9 @@ class Private extends Component {
     }
 
     componentWillMount() {
-      // if (!Cookies.get("AOSToken")) {
-      //   window.location = "/auth/login";
-      // };
+      if (!Cookies.get("AOSToken")) {
+        window.location = "/auth/login";
+      };
     }
 
     getRoutes = routes => {

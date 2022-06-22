@@ -12,9 +12,9 @@ class Auth extends Component {
     }
 
     componentWillMount() {
-      // if (Cookies.get("AOSToken")) {
-      //   window.location = "/";
-      // }
+      if (Cookies.get("AOSToken")) {
+        window.location = "/";
+      }
     }
 
     getRoutes = routes => {

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { USER_INFO } from "../scripts/api";
+import { easy_permission_products, USER_INFO } from "../scripts/api";
 import { getData } from '../scripts/api-service';
+import Cookies from "js-cookie";
 
 export const authContext = createContext();
 
@@ -13,10 +14,23 @@ const AuthContext = props => {
     }, []);
 
     const setUserInfo = async () => {
-        let res = await getData(USER_INFO);
-        if (res) {
-            let masterData = res?.data;
-            setUser(masterData);
+        console.log("data", Cookies.get("AOSToken"));
+        let token = Cookies.get("AOSToken");
+        let user = token ? JSON.parse(token) : null;
+
+        if (user && user.userId) {
+            let res = await getData(USER_INFO + user.userId);
+            if (res) {
+                let masterData = res?.data;
+                setUser(masterData);
+            }
+
+            let pre = await getData(easy_permission_products + user.userId);
+
+            if (pre) {
+                let masterData = res?.data;
+                setPermissions(masterData);
+            }
         }
     }
 

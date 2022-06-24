@@ -9,7 +9,7 @@ import { authContext } from "../../context/AuthContext";
 import avetar from "../../assets/images/avatar-1.png";
 
 export default function Navbar() {
-    const {user, setUserInfo} = useContext(authContext);
+    const {user, setUserInfo, permissions} = useContext(authContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const logoutUser = () => {
@@ -60,11 +60,11 @@ export default function Navbar() {
                             <span>Profile</span>
                         </a>
                     </li> */}
-                    <li className="dropdown-item py-2">
+                    {/* <li className="dropdown-item py-2">
                         <a href="javascript:;" className="text-body ms-0" onClick={() => setIsModalVisible(true)}>
                             {editProfile} <span>Change Password</span>
                         </a>
-                    </li>
+                    </li> */}
                     <li className="dropdown-item py-2" onClick={logoutUser}>
                         <a href="javascript:;" className="text-body ms-0">
                             {logout}

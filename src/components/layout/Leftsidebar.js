@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import logo from "../../assets/images/logo.png";
 import {
   server, streams, downArrow, streamsAccount, Channels, Lines, video,
@@ -9,8 +9,11 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Link } from 'react-router-dom';
 import { ShopOutlined, ShoppingOutlined, MoneyCollectOutlined, BoxPlotOutlined,
   HeatMapOutlined, DatabaseOutlined } from '@ant-design/icons';
+  import { authContext } from "../../context/AuthContext";
 
 export default function Leftsidebar() {
+  const {user, setUserInfo, permissions} = useContext(authContext);
+  
   return (
     <>
       <nav className="sidebar">

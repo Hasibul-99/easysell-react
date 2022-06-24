@@ -11,6 +11,7 @@ export const USER_INFO = "/reseller/me"
 
 
 export const USER_VERIFY = "user_verify/";
+export const inventory_add_readystock = "inventory_add_readystock";
 
 
 

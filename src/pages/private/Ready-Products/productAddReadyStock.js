@@ -12,6 +12,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
     const [form] = Form.useForm();
 
     const onFinish = async (values) => {
+        values.Id = Math.floor(Math.random() * 100000);
         let res = await postData(inventory_add_readystock, values);
 
         if (res) {
@@ -97,7 +98,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                 },
                             ]}
                         >
-                            <InputNumber  style={{width: "100%"}}/>
+                            <Input  style={{width: "100%"}}/>
                         </Form.Item>
                     </Col>
                 </Row>

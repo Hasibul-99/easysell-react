@@ -111,8 +111,8 @@ export default function ReadyProducts() {
             <Card>
                 <Row gutter={16}>
                     <Col className="gutter-row" span={8}>
-                        <p>In Stock: <strong>1049</strong></p>
-                        <p>Available: <strong>13</strong></p>
+                        {/* <p>In Stock: <strong>1049</strong></p>
+                        <p>Available: <strong>13</strong></p> */}
                     </Col>
                     <Col className="gutter-row text-right" span={16}>
                         <Space style={{ textAlign: 'right' }}>

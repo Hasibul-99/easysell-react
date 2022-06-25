@@ -10,7 +10,7 @@ export const CHANGE_PASSWORD = "/auth/change-password";
 
 export const USER_INFO = "userac/"
 export const USER_VERIFY = "user_verify/";
-export const inventory_add_readystock = "inventory_add_readystock";
+export const inventory_add_readystock = "inventory_add_readystock/";
 export const easy_permission_products = "easy_permission_products/"
 
 

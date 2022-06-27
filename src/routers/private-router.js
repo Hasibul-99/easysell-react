@@ -6,6 +6,7 @@ import AddLink from "../pages/private/Channels/add-link";
 import CodeCreate from "../pages/private/codes/code-create";
 import Cards from "../pages/private/codes/index";
 import ReadyProducts from "../pages/private/Ready-Products";
+import CustomSell from "../pages/private/Custom-Sell";
 
 const PrivateRoutes = [
     {
@@ -19,6 +20,13 @@ const PrivateRoutes = [
         path: "ready-product",
         name: "Ready Products",
         component: ReadyProducts,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "custom-sell",
+        name: "Custom Sell",
+        component: CustomSell,
         layout: "/",
         exact: true
     },

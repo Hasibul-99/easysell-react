@@ -44,7 +44,7 @@ export default function Leftsidebar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/" className="nav-link">
+                <Link to="/custom-sell" className="nav-link">
                 <ShoppingOutlined />
                   <span className="link-title ml-3">Custom Sell</span>
                 </Link>

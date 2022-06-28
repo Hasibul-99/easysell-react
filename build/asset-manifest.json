@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.4c4fe9af.css",
+    "main.js": "/static/js/main.1459f5d8.js",
+    "static/js/787.616f56c2.chunk.js": "/static/js/787.616f56c2.chunk.js",
+    "static/media/Mobile login-pana 1.png": "/static/media/Mobile login-pana 1.95b2f5e6b05429bad201.png",
+    "static/media/Forgot password-rafiki 1.png": "/static/media/Forgot password-rafiki 1.871ca8f3a4dfb72d1ed7.png",
+    "index.html": "/index.html",
+    "main.4c4fe9af.css.map": "/static/css/main.4c4fe9af.css.map",
+    "main.1459f5d8.js.map": "/static/js/main.1459f5d8.js.map",
+    "787.616f56c2.chunk.js.map": "/static/js/787.616f56c2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4c4fe9af.css",
+    "static/js/main.1459f5d8.js"
+  ]
+}

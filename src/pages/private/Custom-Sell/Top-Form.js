@@ -1,10 +1,14 @@
 import React from 'react';
 import { Card, Button, Form, Input, Row, Col } from 'antd'
 
-export default function TopForm() {
+export default function TopForm(props) {
+    const { setTempData } = props;
+
     const onFinish = (values) => {
         console.log('Success:', values);
     };
+
+
 
     return (
         <div>
@@ -23,7 +27,7 @@ export default function TopForm() {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Product Namee!',
                                     },
                                 ]}
                             >
@@ -33,11 +37,11 @@ export default function TopForm() {
                         <Col className="gutter-row" span={12}>
                             <Form.Item
                                 label="Bar Code"
-                                name="bar_code"
+                                name="p_barcode"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Bar Code!',
                                     },
                                 ]}
                             >
@@ -51,7 +55,7 @@ export default function TopForm() {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Product Code!',
                                     },
                                 ]}
                             >
@@ -61,11 +65,11 @@ export default function TopForm() {
                         <Col className="gutter-row" span={12}>
                             <Form.Item
                                 label="Rate"
-                                name="rate"
+                                name="p_rate"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Rate!',
                                     },
                                 ]}
                             >
@@ -74,12 +78,12 @@ export default function TopForm() {
                         </Col>
                         <Col className="gutter-row" span={12}>
                             <Form.Item
-                                label="Rate"
-                                name="rate"
+                                label="Quantity"
+                                name="qty"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Quantity!',
                                     },
                                 ]}
                             >

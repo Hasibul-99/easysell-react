@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import TopForm from "./Top-Form";
 import TotalContent from "./Total-Content";
 import CustomerForm from "./CustomerForm";
@@ -43,11 +43,13 @@ const columns = [
 ];
 
 export default function CustomSell() {
+  const [temData, setTempData] = useState([]) 
+
   return (
     <div className='page-content'>
       <div className='row'>
         <div className='col-6'>
-          <TopForm></TopForm>
+          <TopForm setTempData={setTempData}></TopForm>
           <TotalContent></TotalContent>
         </div>
         <div className='col-6'>

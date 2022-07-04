@@ -1,11 +1,22 @@
 import React from 'react';
 import { Card, Button, Form, Input, Row, Col } from 'antd'
+import { postData } from '../../../scripts/api-service';
+import { TEMP_SALE } from '../../../scripts/api';
 
 export default function TopForm(props) {
-    const { setTempData } = props;
+    const { serialNum, getTempSale } = props;
 
-    const onFinish = (values) => {
-        console.log('Success:', values);
+    const onFinish = async (values) => {
+        values.id = Math.floor(Math.random() * 1000);
+        values.serial_key = serialNum;
+        values.n_inStock = values.qty;
+        values.taka = values.qty * values.p_rate;
+
+        let res = postData(TEMP_SALE, values);
+
+        if (res) {
+            getTempSale();
+        }
     };
 
 

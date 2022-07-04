@@ -1,23 +1,48 @@
 import React, { useState } from 'react'
 import { Card, Button, Form, Input, Row, Col, Modal, Checkbox } from 'antd'
+import { postData } from '../../../scripts/api-service';
+import { SOLD_ROOT_TABLE } from '../../../scripts/api';
 
-export default function TotalContent() {
+export default function TotalContent(props) {
+  const { serialNum, temData } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log('Success:', values);
+    values.serial_no = serialNum;
+    values.with_tax = 95;
+    values.total_amount = 95;
+    values.total_products = 2;
+    values.Id = Math.floor(Math.random() * 1000);
+    
+    let res = await postData(SOLD_ROOT_TABLE, values);
+
+    if (res) {
+      console.log("rteeetre5ry", res);
+    }
   };
+
+  const calculateTotalAmount = () => {
+    let total = 0;
+    if (temData?.length) {
+      temData.forEach(tem => {
+        total = total + (tem.taka || 0)
+      })
+    }
+
+    return total;
+  }
 
   return (
     <>
       <Card className='text-center'>
-        Serial Number: 10039 <br />
-        Total Products: 2 <br />
-        Total Amount: 90 <br />
+        Serial Number: {serialNum} <br />
+        Total Products: {temData?.length || 0} <br />
+        Total Amount: {calculateTotalAmount()} <br />
         Tax(2% )    : 1.8   Taka <br />
 
         <hr />
@@ -40,12 +65,12 @@ export default function TotalContent() {
           <Row gutter={16}>
             <Col className="gutter-row" span={12}>
               <Form.Item
-                label="Customer Name"
-                name="p_name"
+                label="Mobile Number"
+                name="customer_number"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your username!',
+                    message: 'Please input Mobile Number',
                   },
                 ]}
               >
@@ -54,12 +79,12 @@ export default function TotalContent() {
             </Col>
             <Col className="gutter-row" span={12}>
               <Form.Item
-                label="Mobile Number"
-                name="bar_code"
+                label="Customer Name"
+                name="customer_name"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your username!',
+                    message: 'Please input Customer Name!',
                   },
                 ]}
               >
@@ -69,11 +94,11 @@ export default function TotalContent() {
             <Col className="gutter-row" span={12}>
               <Form.Item
                 label="Company Name"
-                name="p_code"
+                name="company_name"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your username!',
+                    message: 'Please input Company Name!',
                   },
                 ]}
               >
@@ -89,11 +114,11 @@ export default function TotalContent() {
             <Col className="gutter-row" span={24}>
               <Form.Item
                 label="Customer Address"
-                name="rate"
+                name="customer_address"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your username!',
+                    message: 'Please input Customer Address!',
                   },
                 ]}
               >
@@ -107,11 +132,11 @@ export default function TotalContent() {
             <Col className="gutter-row" span={8}>
               <Form.Item
                 label="Paid"
-                name="rate"
+                name="paid"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your username!',
+                    message: 'Please input paid!',
                   },
                 ]}
               >
@@ -125,7 +150,7 @@ export default function TotalContent() {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your username!',
+                    message: 'Please input due!',
                   },
                 ]}
               >

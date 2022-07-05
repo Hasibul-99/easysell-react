@@ -17,9 +17,12 @@ export default function TopForm(props) {
         let res = postData(TEMP_SALE, values);
 
         if (res) {
-            getTempSale();
             form.resetFields();
             setAmount(0);
+
+            setTimeout(() => {
+                getTempSale();
+            }, 1000)
         }
     };
 

@@ -71,7 +71,7 @@ export default function CustomSell() {
       console.log("serialNum===", serialNum);
 
       let row = masterData.filter(m => m.serial_key === serialNum);
-      setTempData(masterData);
+      setTempData(row);
     }
   };
 

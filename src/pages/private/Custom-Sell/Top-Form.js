@@ -1,10 +1,12 @@
-import React from 'react';
-import { Card, Button, Form, Input, Row, Col } from 'antd'
+import React, { useState } from 'react';
+import { Card, Button, Form, Input, Row, Col, InputNumber } from 'antd'
 import { postData } from '../../../scripts/api-service';
 import { TEMP_SALE } from '../../../scripts/api';
 
 export default function TopForm(props) {
+    const [form] = Form.useForm();
     const { serialNum, getTempSale } = props;
+    const [amount, setAmount] = useState(0);
 
     const onFinish = async (values) => {
         values.id = Math.floor(Math.random() * 1000);
@@ -16,8 +18,23 @@ export default function TopForm(props) {
 
         if (res) {
             getTempSale();
+            form.resetFields();
+            setAmount(0);
         }
     };
+
+    const rateChange = (e) => {
+        let values = form.getFieldValue();
+        let { qty = 0, p_rate = 0 } = values;
+
+        setAmount(qty * p_rate)
+    }
+
+    const qtyChange = (e) => {
+        let values = form.getFieldValue();
+        let { qty = 0, p_rate = 0 } = values;
+        setAmount(qty * p_rate)
+    }
 
 
 
@@ -26,6 +43,7 @@ export default function TopForm(props) {
             <Card>
                 <Form
                     name="basic"
+                    form={form}
                     layout={"vertical"}
                     onFinish={onFinish}
                     autoComplete="off"
@@ -84,7 +102,7 @@ export default function TopForm(props) {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <InputNumber onChange={e => rateChange(e)} style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={12}>
@@ -98,12 +116,12 @@ export default function TopForm(props) {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <InputNumber onChange={e => qtyChange(e)} style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
 
                         <Col className="gutter-row pt-5" span={12}>
-                            Amount: 0.00 Taka
+                            Amount: {amount} Taka
                         </Col>
                     </Row>
 

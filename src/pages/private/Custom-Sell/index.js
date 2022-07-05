@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import TopForm from "./Top-Form";
 import TotalContent from "./Total-Content";
 import CustomerForm from "./CustomerForm";
-import { Card, Table } from 'antd'
-import { getData } from '../../../scripts/api-service';
+import { Card, Table, Modal } from 'antd'
+import { getData, deleteData } from '../../../scripts/api-service';
 import { TEMP_SALE } from '../../../scripts/api';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { authContext } from "../../../context/AuthContext";
+const { confirm } = Modal;
 
+const serialNum = Math.floor(Math.random() * 1000);
 
 export default function CustomSell() {
+  const {permanetValues} = useContext(authContext);
   const [temData, setTempData] = useState([]);
-  const serialNum = 352; //Math.floor(Math.random() * 1000);
 
   const columns = [
     {
@@ -38,10 +41,26 @@ export default function CustomSell() {
       key: 'key',
       render: (row, content, index) => <div>
         <EditOutlined className='mr-3'/>
-        <DeleteOutlined />
+        <DeleteOutlined style={{color: 'red'}} onClick={() => {showConfirm(row.id)}}/>
       </div>,
     },
   ];
+
+  const showConfirm = (tempID) => {
+    confirm({
+      title: 'Do you Want to delete these items?',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        console.log('OK');
+        deleteData(TEMP_SALE + tempID).then(result => {
+          console.log('resilt', result);
+        })
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
 
   const getTempSale = async () => {
     let res = await getData(TEMP_SALE);
@@ -49,8 +68,10 @@ export default function CustomSell() {
     if (res) {
       let masterData = res?.data || [];
 
+      console.log("serialNum===", serialNum);
+
       let row = masterData.filter(m => m.serial_key === serialNum);
-      setTempData(row);
+      setTempData(masterData);
     }
   };
 
@@ -64,7 +85,7 @@ export default function CustomSell() {
       <div className='row'>
         <div className='col-6'>
           <TopForm serialNum={serialNum} getTempSale={getTempSale}></TopForm>
-          <TotalContent serialNum={serialNum} temData={temData}></TotalContent>
+          <TotalContent serialNum={serialNum} temData={temData} permanetValues={permanetValues}></TotalContent>
         </div>
         <div className='col-6'>
           <Card>

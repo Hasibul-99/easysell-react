@@ -14,7 +14,9 @@ export const inventory_add_readystock = "inventory_add_readystock/";
 export const easy_permission_products = "easy_permission_products/";
 
 export const TEMP_SALE = "temp_sale/";
-export const  SOLD_ROOT_TABLE  = "sold_root_table/"
+export const  SOLD_ROOT_TABLE  = "sold_root_table/";
+export const PERMANENT_VALUES = "zzz_permanent_values/"
+export const CUSTOMER_LIST = "customer_list/"
 
 
 

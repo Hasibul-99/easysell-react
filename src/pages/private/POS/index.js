@@ -7,6 +7,7 @@ import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 const { Search } = Input;
 
 export default function POS() {
+    const [form] = Form.useForm();
     const [stocks, setStocks] = useState([]);
     const [allStocks, setAllStocks] = useState([]);
     const [selectedStocks, setSelectedStocks] = useState([]);
@@ -127,14 +128,15 @@ export default function POS() {
             </Row>
 
             <Modal title="Update" visible={isModalVisible} footer={false}
-                onCancel={() => setIsModalVisible(false)}>
+                onCancel={() => {setIsModalVisible(false); form.resetFields()}}>
                 <Form
                     layout={'vertical'}
                     name="basic"
-                    initialValues={{
-                        qty: editStock?.qty || 0,
-                        sell_ppu: editStock?.sell_ppu || undefined,
-                    }}
+                    form={form} 
+                    // initialValues={{
+                    //     qty: editStock?.qty || 0,
+                    //     sell_ppu: editStock?.sell_ppu || undefined,
+                    // }}
                     onFinish={onFinish}
                     autoComplete="off"
                 >
@@ -146,11 +148,11 @@ export default function POS() {
                                 required: true,
                                 message: 'Please input your Product Quentity!',
                             },{
-                                initialValues: editStock?.qty || undefined
+                                // initialValues: editStock?.qty || undefined
                             }
                         ]}
                     >
-                        <InputNumber style={{ width: '100%' }} />
+                        <InputNumber style={{ width: '100%' }} defaultValue={editStock?.qty || undefined} />
                     </Form.Item>
 
                     <Form.Item
@@ -177,7 +179,7 @@ export default function POS() {
                     >
 
                         <Button type="primary" danger className='mr-3' 
-                            onClick={() => {setIsModalVisible(false); setEditStock(null)}}>
+                            onClick={() => {setIsModalVisible(false); setEditStock(null); form.resetFields()}}>
                             Cancel
                         </Button>
                         <Button type="primary" htmlType="submit">

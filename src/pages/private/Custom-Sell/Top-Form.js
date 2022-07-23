@@ -1,16 +1,52 @@
-import React from 'react';
-import { Card, Button, Form, Input, Row, Col } from 'antd'
+import React, { useState } from 'react';
+import { Card, Button, Form, Input, Row, Col, InputNumber } from 'antd'
+import { postData } from '../../../scripts/api-service';
+import { TEMP_SALE } from '../../../scripts/api';
 
-export default function TopForm() {
-    const onFinish = (values) => {
-        console.log('Success:', values);
+export default function TopForm(props) {
+    const [form] = Form.useForm();
+    const { serialNum, getTempSale } = props;
+    const [amount, setAmount] = useState(0);
+
+    const onFinish = async (values) => {
+        values.id = Math.floor(Math.random() * 1000);
+        values.serial_key = serialNum;
+        values.n_inStock = values.qty;
+        values.taka = values.qty * values.p_rate;
+
+        let res = postData(TEMP_SALE, values);
+
+        if (res) {
+            form.resetFields();
+            setAmount(0);
+
+            setTimeout(() => {
+                getTempSale();
+            }, 1000)
+        }
     };
+
+    const rateChange = (e) => {
+        let values = form.getFieldValue();
+        let { qty = 0, p_rate = 0 } = values;
+
+        setAmount(qty * p_rate)
+    }
+
+    const qtyChange = (e) => {
+        let values = form.getFieldValue();
+        let { qty = 0, p_rate = 0 } = values;
+        setAmount(qty * p_rate)
+    }
+
+
 
     return (
         <div>
             <Card>
                 <Form
                     name="basic"
+                    form={form}
                     layout={"vertical"}
                     onFinish={onFinish}
                     autoComplete="off"
@@ -23,7 +59,7 @@ export default function TopForm() {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Product Namee!',
                                     },
                                 ]}
                             >
@@ -33,11 +69,11 @@ export default function TopForm() {
                         <Col className="gutter-row" span={12}>
                             <Form.Item
                                 label="Bar Code"
-                                name="bar_code"
+                                name="p_barcode"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Bar Code!',
                                     },
                                 ]}
                             >
@@ -51,7 +87,7 @@ export default function TopForm() {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Product Code!',
                                     },
                                 ]}
                             >
@@ -61,34 +97,34 @@ export default function TopForm() {
                         <Col className="gutter-row" span={12}>
                             <Form.Item
                                 label="Rate"
-                                name="rate"
+                                name="p_rate"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Rate!',
                                     },
                                 ]}
                             >
-                                <Input />
+                                <InputNumber onChange={e => rateChange(e)} style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={12}>
                             <Form.Item
-                                label="Rate"
-                                name="rate"
+                                label="Quantity"
+                                name="qty"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your username!',
+                                        message: 'Please input Quantity!',
                                     },
                                 ]}
                             >
-                                <Input />
+                                <InputNumber onChange={e => qtyChange(e)} style={{ width: '100%' }} />
                             </Form.Item>
                         </Col>
 
                         <Col className="gutter-row pt-5" span={12}>
-                            Amount: 0.00 Taka
+                            Amount: {amount} Taka
                         </Col>
                     </Row>
 

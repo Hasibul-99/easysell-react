@@ -7,6 +7,9 @@ import CodeCreate from "../pages/private/codes/code-create";
 import Cards from "../pages/private/codes/index";
 import ReadyProducts from "../pages/private/Ready-Products";
 import CustomSell from "../pages/private/Custom-Sell";
+import POS from "../pages/private/POS";
+import Expense from "../pages/private/expense";
+import Payments from "../pages/private/payments";
 
 const PrivateRoutes = [
     {
@@ -62,6 +65,27 @@ const PrivateRoutes = [
         path: "code-list",
         name: "Code List",
         component: Cards,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "pos",
+        name: "POS",
+        component: POS,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "expense",
+        name: "expemse",
+        component: Expense,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "payments",
+        name: "Payments",
+        component: Payments,
         layout: "/",
         exact: true
     },

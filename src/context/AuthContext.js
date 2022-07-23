@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { easy_permission_products, USER_INFO } from "../scripts/api";
+import { easy_permission_products, PERMANENT_VALUES, USER_INFO } from "../scripts/api";
 import { getData } from '../scripts/api-service';
 import Cookies from "js-cookie";
 
@@ -8,6 +8,7 @@ export const authContext = createContext();
 const AuthContext = props => {
     const [user, setUser] = useState();
     const [permissions, setPermissions] = useState();
+    const [permanetValues, setPermanetValues] = useState();
 
     useEffect(() => {
         setUser();
@@ -31,6 +32,12 @@ const AuthContext = props => {
                 let masterData = res?.data;
                 setPermissions(masterData);
             }
+
+            let perVal = await getData(PERMANENT_VALUES);
+            if (perVal) {
+                let masterData = perVal.data[0];
+                setPermanetValues(masterData);
+            }
         }
     }
 
@@ -49,7 +56,8 @@ const AuthContext = props => {
                 setUserInfo,
                 getUserInfo,
                 DeleteUserInfo,
-                permissions
+                permissions,
+                permanetValues
             }}>
             {props.children}
         </authContext.Provider>

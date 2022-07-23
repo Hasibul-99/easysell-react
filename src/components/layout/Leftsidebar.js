@@ -38,7 +38,7 @@ export default function Leftsidebar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/" className="nav-link">
+                <Link to="/pos" className="nav-link">
                   <ShopOutlined />
                   <span className="link-title ml-3">POS</span>
                 </Link>
@@ -50,15 +50,15 @@ export default function Leftsidebar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/" className="nav-link">
+                <Link to="/payments" className="nav-link">
                 <MoneyCollectOutlined />
                   <span className="link-title ml-3">Payments</span>
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/" className="nav-link">
+                <Link to="/expense" className="nav-link">
                   <BoxPlotOutlined />
-                  <span className="link-title ml-3">Express</span>
+                  <span className="link-title ml-3">Expense</span>
                 </Link>
               </li>
               <li className="nav-item">

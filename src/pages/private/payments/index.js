@@ -24,8 +24,10 @@ export default function Payments() {
   }
 
   const onFinish = async (values) => {
-    values.Id = Math.floor(Math.random() * 1000);
+    // if (!selectedExpense)
+     values.Id = Math.floor(Math.random() * 1000);
     values.serial_no = Math.floor(Math.random() * 100000);
+    values.his_number = Math.floor(Math.random() * 100000);
     values.paid_date = moment().format('MM/DD/YYYY hh:mm:ss a') // "7/4/2022 10:15:14 PM";
     values.status = values?.due == 0 ? 'Paid' : 'Due';
 
@@ -51,9 +53,8 @@ export default function Payments() {
   };
 
   const onFinishSearch = (values) => {
-    console.log('Success:', values);
     if (values.user_id) {
-      let filter = allExpenses.filter(e => e.e_no == values.user_id);
+      let filter = allExpenses.filter(e => e.serial_no == values.user_id);
       setExpenses(filter);
     } else {
       setExpenses(allExpenses);
@@ -144,7 +145,9 @@ export default function Payments() {
       paid: item.paid,
       reason: item.reason,
       s_name: item.s_name,
-      status: item.status
+      status: item.status,
+      paid_by: item.paid_by,
+      bill_by: item.bill_by
     });
 
     setSelectedExpense(item);

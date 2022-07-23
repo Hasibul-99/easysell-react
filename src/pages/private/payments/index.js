@@ -24,15 +24,18 @@ export default function Payments() {
   }
 
   const onFinish = async (values) => {
-    // if (!selectedExpense)
-     values.Id = Math.floor(Math.random() * 1000);
-    values.serial_no = Math.floor(Math.random() * 100000);
-    values.his_number = Math.floor(Math.random() * 100000);
+    if (!selectedExpense?.Id) values.Id = Math.floor(Math.random() * 1000);
+    else values.Id = selectedExpense.Id;
+
+    if (!selectedExpense?.serial_no) values.serial_no = Math.floor(Math.random() * 100000);
+    else values.serial_no = selectedExpense?.serial_no;
+
     values.paid_date = moment().format('MM/DD/YYYY hh:mm:ss a') // "7/4/2022 10:15:14 PM";
     values.status = values?.due == 0 ? 'Paid' : 'Due';
+    values.bill_by = 'hello';
 
     if (selectedExpense) {
-      let res = await putData(payments + selectedExpense.Id, values);
+      let res = await putData(payments + selectedExpense.serial_no, values);
       
       if (res) {
         getExpensess();
@@ -53,14 +56,16 @@ export default function Payments() {
   };
 
   const onFinishSearch = (values) => {
+    console.log('Success:', values);
     if (values.user_id) {
-      let filter = allExpenses.filter(e => e.serial_no == values.user_id);
+      let filter = allExpenses.filter(e => e.e_no == values.user_id);
       setExpenses(filter);
     } else {
       setExpenses(allExpenses);
     }
   }
 
+  
   const columns = [
     {
       title: 'Serial no',
@@ -68,7 +73,7 @@ export default function Payments() {
       key: 'serial_no',
     },
     {
-      title: 'Expense Reason',
+      title: 'Reason',
       dataIndex: 'reason',
       key: 'v',
     },
@@ -93,19 +98,19 @@ export default function Payments() {
       dataIndex: 'due',
     },
     {
-      title: 'Date',
+      title: 'Paid Date',
       key: 'paid_date',
       dataIndex: 'paid_date',
     },
     {
-      title: 'Spent By',
-      key: 'bill_by',
-      dataIndex: 'bill_by'
-    },
-    {
-      title: 'Approved By',
+      title: 'Pad By',
       key: 'paid_by',
       dataIndex: 'paid_by'
+    },
+    {
+      title: 'Number',
+      key: 'his_number',
+      dataIndex: 'his_number'
     },
     {
       title: 'ACTION',
@@ -141,13 +146,12 @@ export default function Payments() {
     form.setFieldsValue({
       amount: item.amount,
       due: item.due,
-      e_no: item.e_no,
+      his_number: item.his_number,
       paid: item.paid,
       reason: item.reason,
-      s_name: item.s_name,
-      status: item.status,
       paid_by: item.paid_by,
-      bill_by: item.bill_by
+      bill_by: item.bill_by,
+      status: item.status
     });
 
     setSelectedExpense(item);
@@ -205,7 +209,7 @@ export default function Payments() {
       </Card>
 
       <Modal
-        title={selectedExpense ? 'Update Expense' : "Expeses Add"}
+        title={selectedExpense ? 'Update Payment' : "Payment Add"}
         visible={isModalBanned}
         footer={false}
         onCancel={() => { setIsModalBanned(false); setSelectedExpense(null) }}>
@@ -216,15 +220,16 @@ export default function Payments() {
           onFinish={onFinish}
           autoComplete="off"
         >
+
           <Row gutter={16}>
             <Col className="gutter-row" span={12}>
               <Form.Item
-                label="Expense Resson"
-                name="reason"
+                label="Name"
+                name="paid_by"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input reason!',
+                    message: 'Please input Name!',
                   },
                 ]}
               >
@@ -232,6 +237,35 @@ export default function Payments() {
               </Form.Item>
             </Col>
 
+            <Col className="gutter-row" span={12}>
+              <Form.Item
+                label="Number"
+                name="his_number"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input number!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            <Col className="gutter-row" span={12}>
+              <Form.Item
+                label="Reasson"
+                name="reason"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input reasson!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
             <Col className="gutter-row" span={12}>
               <Form.Item
                 label="Amount"
@@ -254,7 +288,7 @@ export default function Payments() {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input paid!',
+                    message: 'Please input pain!',
                   },
                 ]}
               >
@@ -269,35 +303,6 @@ export default function Payments() {
                   {
                     required: true,
                     message: 'Please input due!',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col className="gutter-row" span={12}>
-              <Form.Item
-                label="Spent By"
-                name="paid_by"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input paid_by!',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col className="gutter-row" span={12}>
-              <Form.Item
-                label="Approved By"
-                name="bill_by"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input bill_by!',
                   },
                 ]}
               >

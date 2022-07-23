@@ -18,7 +18,7 @@ export const  SOLD_ROOT_TABLE  = "sold_root_table/";
 export const PERMANENT_VALUES = "zzz_permanent_values/"
 export const CUSTOMER_LIST = "customer_list/"
 
-export const EXPENSES = "s_expense/";
+export const EXPENSES = "m_expense/";
 export const payments = "payments/"
 
 

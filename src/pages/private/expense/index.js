@@ -25,8 +25,10 @@ export default function Expense() {
 
   const onFinish = async (values) => {
     if (!selectedExpense) values.Id = Math.floor(Math.random() * 1000);
+    else values.Id = selectedExpense.Id;
     values.date = moment().format('MM/DD/YYYY hh:mm:ss a') // "7/4/2022 10:15:14 PM";
     values.status = values?.due == 0 ? 'Paid' : 'Due';
+    values.e_no = Math.floor(Math.random() * 1000);
 
     if (selectedExpense) {
       let res = await putData(EXPENSES + selectedExpense.Id, values);
@@ -66,9 +68,9 @@ export default function Expense() {
       key: 'e_no',
     },
     {
-      title: 'Reason',
-      dataIndex: 'reason',
-      key: 'v',
+      title: 'Expense Reason',
+      dataIndex: 'e_reason',
+      key: 'e_reason',
     },
     {
       title: 'Status',
@@ -91,19 +93,19 @@ export default function Expense() {
       dataIndex: 'due',
     },
     {
-      title: 'Paid Date',
+      title: 'Date',
       key: 'date',
       dataIndex: 'date',
     },
     {
-      title: 'Paid By',
-      key: 's_name',
-      dataIndex: 's_name'
+      title: 'Spent By',
+      key: 'e_by',
+      dataIndex: 'e_by'
     },
     {
-      title: 'Number',
-      key: 'e_no',
-      dataIndex: 'e_no'
+      title: 'Approved By',
+      key: 'a_by',
+      dataIndex: 'a_by'
     },
     {
       title: 'ACTION',
@@ -134,15 +136,16 @@ export default function Expense() {
       )
     },
   ];
-
+  
   const updateExpenses = (item) => {
     form.setFieldsValue({
       amount: item.amount,
       due: item.due,
       e_no: item.e_no,
       paid: item.paid,
-      reason: item.reason,
-      s_name: item.s_name,
+      e_reason: item.e_reason,
+      e_by: item.e_by,
+      a_by: item.a_by,
       status: item.status
     });
 
@@ -212,15 +215,16 @@ export default function Expense() {
           onFinish={onFinish}
           autoComplete="off"
         >
+          
           <Row gutter={16}>
             <Col className="gutter-row" span={12}>
               <Form.Item
-                label="Name"
-                name="s_name"
+                label="Expense Resson"
+                name="e_reason"
                 rules={[
                   {
                     required: true,
-                    message: 'Please input Name!',
+                    message: 'Please input reason!',
                   },
                 ]}
               >
@@ -228,35 +232,6 @@ export default function Expense() {
               </Form.Item>
             </Col>
 
-            <Col className="gutter-row" span={12}>
-              <Form.Item
-                label="Number"
-                name="e_no"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input number!',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-
-            <Col className="gutter-row" span={12}>
-              <Form.Item
-                label="Reasson"
-                name="reason"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please input reasson!',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
             <Col className="gutter-row" span={12}>
               <Form.Item
                 label="Amount"
@@ -279,7 +254,7 @@ export default function Expense() {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input pain!',
+                    message: 'Please input paid!',
                   },
                 ]}
               >
@@ -294,6 +269,35 @@ export default function Expense() {
                   {
                     required: true,
                     message: 'Please input due!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+
+            <Col className="gutter-row" span={12}>
+              <Form.Item
+                label="Spent By"
+                name="e_by"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input paid_by!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col className="gutter-row" span={12}>
+              <Form.Item
+                label="Approved By"
+                name="a_by"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input bill_by!',
                   },
                 ]}
               >

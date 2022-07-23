@@ -24,7 +24,7 @@ export default function Expense() {
   }
 
   const onFinish = async (values) => {
-    values.Id = Math.floor(Math.random() * 1000);
+    if (!selectedExpense) values.Id = Math.floor(Math.random() * 1000);
     values.date = moment().format('MM/DD/YYYY hh:mm:ss a') // "7/4/2022 10:15:14 PM";
     values.status = values?.due == 0 ? 'Paid' : 'Due';
 

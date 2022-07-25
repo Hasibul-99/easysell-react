@@ -8,6 +8,7 @@ import Cards from "../pages/private/codes/index";
 import ReadyProducts from "../pages/private/Ready-Products";
 import CustomSell from "../pages/private/Custom-Sell";
 import POS from "../pages/private/POS";
+import SuplierStuff from "../pages/private/Suplier_Stuff";
 
 const PrivateRoutes = [
     {
@@ -70,6 +71,13 @@ const PrivateRoutes = [
         path: "pos",
         name: "POS",
         component: POS,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "suplier_stuff",
+        name: "Supplier Stuff",
+        component: SuplierStuff,
         layout: "/",
         exact: true
     },

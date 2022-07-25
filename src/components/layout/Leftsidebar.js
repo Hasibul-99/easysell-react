@@ -99,7 +99,7 @@ export default function Leftsidebar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/" className="nav-link">
+                <Link to="/stuff_section" className="nav-link">
                   {server}
                   <span className="link-title ml-3">Staff Section</span>
                 </Link>

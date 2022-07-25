@@ -11,6 +11,7 @@ import POS from "../pages/private/POS";
 import SuplierStuff from "../pages/private/Suplier_Stuff";
 import Expense from "../pages/private/expense";
 import Payments from "../pages/private/payments";
+import StuffSection from "../pages/private/Stuff_section";
 
 const PrivateRoutes = [
     {
@@ -94,6 +95,13 @@ const PrivateRoutes = [
         path: "payments",
         name: "Payments",
         component: Payments,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "stuff_section",
+        name: "Stuff Section",
+        component: StuffSection,
         layout: "/",
         exact: true
     },

@@ -20,6 +20,7 @@ export const CUSTOMER_LIST = "customer_list/"
 
 export const EXPENSES = "m_expense/";
 export const payments = "payments/"
+export const SUPLIER_STUFF = "s_expense/"
 
 
 

@@ -8,12 +8,9 @@ import Cards from "../pages/private/codes/index";
 import ReadyProducts from "../pages/private/Ready-Products";
 import CustomSell from "../pages/private/Custom-Sell";
 import POS from "../pages/private/POS";
-<<<<<<< HEAD
 import SuplierStuff from "../pages/private/Suplier_Stuff";
-=======
 import Expense from "../pages/private/expense";
 import Payments from "../pages/private/payments";
->>>>>>> 18407d557584f25b2230922c227902742d7a07eb
 
 const PrivateRoutes = [
     {
@@ -80,11 +77,13 @@ const PrivateRoutes = [
         exact: true
     },
     {
-<<<<<<< HEAD
         path: "suplier_stuff",
         name: "Supplier Stuff",
         component: SuplierStuff,
-=======
+        layout: "/",
+        exact: true
+    },
+    {
         path: "expense",
         name: "expemse",
         component: Expense,
@@ -95,7 +94,6 @@ const PrivateRoutes = [
         path: "payments",
         name: "Payments",
         component: Payments,
->>>>>>> 18407d557584f25b2230922c227902742d7a07eb
         layout: "/",
         exact: true
     },

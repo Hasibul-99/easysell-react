@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Table, Button, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
 import { getData, postData, putData } from '../../../scripts/api-service';
-import { USERAC, EASY_PERMISSION } from '../../../scripts/api';
+import { USERAC, easy_permission_products } from '../../../scripts/api';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -24,23 +24,24 @@ export default function StuffSection() {
         }
     }
 
-        // Email: "017@gmail.com"
-        // Id: 1
-        // Name: "017"
-        // Number: "017"
-        // Password: "017"
-        // isStaff: 0
-        // time: "7/30/2021 11:00:22 PM"
+    // Email: "017@gmail.com"
+    // Id: 1
+    // Name: "017"
+    // Number: "017"
+    // Password: "017"
+    // isStaff: 0
+    // time: "7/30/2021 11:00:22 PM"
     const onFinish = async (values) => {
         if (!selectedExpense) values.Id = Math.floor(Math.random() * 1000);
         else values.Id = selectedExpense.Id;
         values.time = moment().format('MM/DD/YYYY hh:mm:ss a') // "7/4/2022 10:15:14 PM";
-        values.isStaff = 0;
+        values.isStaff = 1;
 
         if (selectedExpense) {
             let res = await putData(USERAC + selectedExpense.Number, values);
 
             if (res) {
+                assignPermissions(values.Number, values, 'update')
                 getExpensess();
                 form.resetFields();
                 setIsModalBanned(false);
@@ -50,6 +51,7 @@ export default function StuffSection() {
             let res = await postData(USERAC, values);
 
             if (res) {
+                assignPermissions(values.Number, values, 'create')
                 getExpensess();
                 form.resetFields();
                 setIsModalBanned(false);
@@ -57,6 +59,23 @@ export default function StuffSection() {
             }
         }
     };
+
+    const assignPermissions = async(number, values, context) => {
+        let data = {
+            number: number
+        };
+
+        Object.keys(permissions).forEach(function(key) {
+            data[key] = values[key] ? 1 : 0;
+        });
+
+        if (context === 'update') {
+            await putData(easy_permission_products + number, data);
+        } else {
+            await postData(easy_permission_products, data);
+        }
+        
+    } 
 
     const onFinishSearch = (values) => {
         console.log('Success:', values);
@@ -122,15 +141,38 @@ export default function StuffSection() {
             Password: item.Password
         });
 
+        getSelectedUserPermissions(item.Number)
+
         setSelectedExpense(item);
         setIsModalBanned(true);
     }
 
-    const getPermissions = async () => {
-        let res = await getData(EASY_PERMISSION);
+    const getSelectedUserPermissions = async(number) => {
+        let res = await getData(easy_permission_products+ number);
 
         if (res) {
-            setPermissions(res?.data || []);
+            let masterData = res?.data || {},
+                fiels= {};
+
+            Object.keys(masterData).forEach(function(key) {
+                fiels[key] = !!masterData[key]
+            });
+
+            setTimeout(() => {
+                form.setFieldsValue(fiels);
+            })
+        }
+    }
+
+    const getPermissions = async () => {
+        let res = await getData(easy_permission_products);
+
+        if (res) {
+            let master = res?.data || [];
+            let data = master?.length ? master[0] : {};
+
+            delete data.number;
+            setPermissions(data);
         }
     }
 
@@ -183,7 +225,7 @@ export default function StuffSection() {
             </Card>
 
             <Modal
-                title={selectedExpense ? 'Update Stuff' : "Stuff Add" }
+                title={selectedExpense ? 'Update Stuff' : "Stuff Add"}
                 visible={isModalBanned}
                 footer={false}
                 onCancel={() => { setIsModalBanned(false); setSelectedExpense(null) }}>
@@ -254,9 +296,17 @@ export default function StuffSection() {
                                 <Input />
                             </Form.Item>
                         </Col>
-                    </Row>
 
-                    {/* <Checkbox.Group options={permissions} onChange={onChange} /> */}
+                        {
+                            Object.keys(permissions).map(function (key) {
+                                return <Col className="gutter-row" span={12} key={key}>
+                                    <Form.Item name={key} valuePropName="checked">
+                                        <Checkbox>{key}</Checkbox>
+                                    </Form.Item>
+                                </Col>
+                            })
+                        }
+                    </Row>
 
                     <Form.Item >
                         <Button type="primary" htmlType="submit" style={{ width: '100%' }}>

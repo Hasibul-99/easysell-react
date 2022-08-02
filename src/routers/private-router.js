@@ -12,6 +12,7 @@ import SuplierStuff from "../pages/private/Suplier_Stuff";
 import Expense from "../pages/private/expense";
 import Payments from "../pages/private/payments";
 import StuffSection from "../pages/private/Stuff_section";
+import ReportStatement from "../pages/private/ReportAndStatement";
 
 const PrivateRoutes = [
     {
@@ -102,6 +103,13 @@ const PrivateRoutes = [
         path: "stuff_section",
         name: "Stuff Section",
         component: StuffSection,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "report_and_statement",
+        name: "Report And Statement",
+        component: ReportStatement,
         layout: "/",
         exact: true
     },

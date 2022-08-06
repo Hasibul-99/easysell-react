@@ -20,7 +20,7 @@ export default function ReportStatement() {
             </Card>
 
             <Card>
-                <Tabs defaultActiveKey="2">
+                <Tabs defaultActiveKey="3">
                     <TabPane tab="Balance Sheet" key="1">
                         <BalanceSheet></BalanceSheet>
                     </TabPane>

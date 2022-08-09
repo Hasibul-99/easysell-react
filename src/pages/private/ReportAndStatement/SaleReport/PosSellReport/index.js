@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table, Button, Tabs, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
+import { getData } from '../../../../../scripts/api-service';
+import { sold_root_table_pos } from '../../../../../scripts/api';
 
 const { Search } = Input;
 const { TextArea } = Input;
@@ -8,52 +10,38 @@ export default function POSSellReport() {
     const [form] = Form.useForm();
     const [visible, setVisible] = useState(false);
     const [returnModal, setReturnModal] = useState(false);
-
-    const dataSource = [
-        {
-            key: '1',
-            name: 'Mike',
-            age: 32,
-            address: '10 Downing Street',
-        },
-        {
-            key: '2',
-            name: 'John',
-            age: 42,
-            address: '10 Downing Street',
-        },
-    ];
+    const [posData, setPosData] = useState();
 
     const columns = [
         {
             title: 'SL NO.',
-            dataIndex: 'name',
-            key: 'name',
+            dataIndex: 'serial_no',
+            key: 'serial_no',
         },
         {
             title: 'Customer Phone Number',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'customer_number',
+            key: 'customer_number',
         },
         {
             title: 'Customer Name',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'customer_name',
+            key: 'customer_name',
         },
         {
             title: 'Status',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'status',
+            key: 'status',
         },
         {
             title: 'Amount',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'total_amount',
+            key: 'total_amount',
         },
         {
             title: 'Date',
-            dataIndex: 'age',
-            key: 'age',
+            dataIndex: 'date',
+            key: 'date',
         },
         {
             title: 'Action',
@@ -110,11 +98,23 @@ export default function POSSellReport() {
         // 
     };
 
+    const getPosData = async () => {
+        let res = await getData(sold_root_table_pos);
+
+        if (res) {
+            setPosData(res.data)
+        }
+    }
+
+    useEffect(() => {
+        getPosData()
+    }, [])
+
     return (
         <div>
             <Search placeholder="input search text mb-4" style={{ width: '400px' }} onSearch={onSearch} enterButton />
 
-            <Table dataSource={dataSource} columns={columns} pagination={false} />;
+            <Table dataSource={posData} columns={columns} pagination={false} />;
 
             <Modal
                 title="Report"
@@ -199,7 +199,7 @@ export default function POSSellReport() {
                     </Row>
                 </Form>
 
-                <Table dataSource={dataSource} columns={TableVolumns} pagination={false} />;
+                <Table dataSource={posData} columns={TableVolumns} pagination={false} />;
 
             </Modal>
 

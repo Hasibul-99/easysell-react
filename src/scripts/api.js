@@ -22,7 +22,11 @@ export const EXPENSES = "m_expense/";
 export const payments = "payments/"
 export const SUPLIER_STUFF = "s_expense/"
 export const EASY_PERMISSION = "easy_permission/"
-export const USERAC = "userac/"
+export const USERAC = "userac/";
 
+export const sold_root_table_pos = "sold_root_table_pos/";
+export const sold_root_table = "sold_root_table/";
+export const customer_list = "customer_list/";
+export const return_products = "return_products"
 
 

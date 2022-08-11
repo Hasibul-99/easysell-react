@@ -147,10 +147,10 @@ export default function ReturnedProducts() {
         <div className='page-content'>
             <Row className='mb-5'>
                 <Col span={12}>
-                    <h3>Stuff</h3>
+                    <h3>Returned Products</h3>
                 </Col>
                 <Col span={12} className='text-right' style={{ textAlign: "end" }}>
-                    <Button type="primary" onClick={() => setIsModalBanned(true)}>Add Stuff</Button>
+                    <Button type="primary" onClick={() => setIsModalBanned(true)}>Add Returned Products</Button>
                 </Col>
             </Row>
 

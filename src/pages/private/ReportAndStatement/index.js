@@ -5,6 +5,7 @@ import BalanceSheet from './BalanceSheet';
 import SaleReport from './SaleReport';
 import PusrchaseReport from './PurchaseReport';
 import CustomerReport from './CustomerReport';
+import DueReport from './DueReport';
 
 const { TabPane } = Tabs;
 
@@ -20,7 +21,7 @@ export default function ReportStatement() {
             </Card>
 
             <Card>
-                <Tabs defaultActiveKey="2">
+                <Tabs defaultActiveKey="6">
                     <TabPane tab="Balance Sheet" key="1">
                         <BalanceSheet></BalanceSheet>
                     </TabPane>
@@ -35,6 +36,9 @@ export default function ReportStatement() {
                     </TabPane>
                     <TabPane tab="Customer Report" key="5">
                         <CustomerReport></CustomerReport>
+                    </TabPane>
+                    <TabPane tab="Due Report" key="6">
+                        <DueReport></DueReport>
                     </TabPane>
                 </Tabs>
             </Card>

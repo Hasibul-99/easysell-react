@@ -2,7 +2,7 @@ import EditProfile from "../pages/private/profile/edit-profile";
 import ChangeDetails from "../pages/private/Change-Details/index";
 import Channels from "../pages/private/Channels/index";
 import Page404 from "../pages/private/404";
-import AddLink from "../pages/private/Channels/add-link";
+// import AddLink from "../pages/private/Channels/add-link";
 import CodeCreate from "../pages/private/codes/code-create";
 import Cards from "../pages/private/codes/index";
 import ReadyProducts from "../pages/private/Ready-Products";

@@ -79,7 +79,7 @@ export default function Channels() {
       key: 'address',
     },
   ];
-  
+
 
   useEffect(() => {
 
@@ -232,12 +232,18 @@ export default function Channels() {
     </Row>
 
     <Card>
-      <h4 className='mb-3'>Last 7 days Sells</h4>
-      <RangePicker  className='mv-4' ranges={{
-        Today: [moment(), moment()],
-        'This Month': [moment().startOf('month'), moment().endOf('month')],
-      }} />
-    
+      <Row gutter={16} className="mb-4">
+        <Col className="gutter-row" span={12}>
+          <h4 className='mb-3'>Last 7 days Sells</h4>
+        </Col>
+        <Col className="gutter-row" span={12}>
+          <RangePicker className='mv-4' ranges={{
+            Today: [moment(), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+          }} />
+        </Col>
+      </Row>
+
       <Table dataSource={dataSource} columns={columns} pagination={false} />;
     </Card>
 

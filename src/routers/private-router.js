@@ -14,6 +14,7 @@ import Payments from "../pages/private/payments";
 import StuffSection from "../pages/private/Stuff_section";
 import ReportStatement from "../pages/private/ReportAndStatement";
 import ReturnedProducts from "../pages/private/returned-products";
+import Settings from "../pages/private/Settings";
 
 const PrivateRoutes = [
     {
@@ -118,6 +119,13 @@ const PrivateRoutes = [
         path: "returned_products",
         name: "Report And Statement",
         component: ReturnedProducts,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "settings",
+        name: "Settings",
+        component: Settings,
         layout: "/",
         exact: true
     },

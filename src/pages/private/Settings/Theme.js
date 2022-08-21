@@ -1,16 +1,84 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Checkbox, Select, Form, Input, Space, Row, Col } from 'antd';
+import { getData, putData } from '../../../scripts/api-service';
+import { theme_color, PERMANENT_VALUES } from '../../../scripts/api';
+import { alertPop } from '../../../scripts/helper';
+
 const { Option } = Select;
 
 export default function Theme() {
+  const [form] = Form.useForm();
+  const [themes, setThemes] = useState();
+  const [selectTheme, setSelectedTheme] = useState()
+  const [permanentValues, setPermanentValues] = useState();
 
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
+    setSelectedTheme(value)
   };
 
-  const onFinish = (values) => {
-    console.log('Success:', values);
+  const onFinish = async (values) => {
+    let find = themes.find(item => item.theme_name === selectTheme);
+
+    find.dv_bg_color = values?.dv_bg_color;
+    find.dv_topbar_bg_color = values?.dv_topbar_bg_color;
+    find.dv_topbar_fg_color = values?.dv_topbar_fg_color;
+    find.theme_name = values?.theme_name;
+
+    let res = await putData(theme_color+ find?.Id, find);
+
+    if (res) {
+      getThemeList();
+      alertPop('success', 'Update successfully');
+    }
   };
+
+  const getThemeList = async () => {
+    let res = await getData(theme_color);
+
+    if (res) {
+      setThemes(res.data);
+    }
+  }
+
+  const getPermanentValues = async () => {
+    let res = await getData(PERMANENT_VALUES);
+
+    if (res) {
+      let masterData = res?.data?.length ? res.data[0] : '';
+      setPermanentValues(masterData);
+      setSelectedTheme(masterData?.THEME_NAME);
+    }
+  }
+
+  const applyTheme = async () => {
+    permanentValues.THEME_NAME = selectTheme;
+    
+    let res = await putData(PERMANENT_VALUES + permanentValues.Id, permanentValues);
+
+    if (res) {
+      alertPop('success', 'Update successfully');
+    }
+  }
+
+  useEffect(() => {
+    if (themes?.length && selectTheme) {
+      let find = themes.find(item => item.theme_name === selectTheme);
+
+      if (find) {
+        form.setFieldsValue({
+          dv_bg_color: find?.dv_bg_color,
+          dv_topbar_bg_color: find?.dv_topbar_bg_color,
+          dv_topbar_fg_color: find?.dv_topbar_fg_color,
+          theme_name: find?.theme_name,
+        });
+      }
+    }
+  }, [selectTheme, themes]);
+
+  useEffect(() => {
+    getThemeList();
+    getPermanentValues()
+  }, []);
 
   return (
     <div>
@@ -19,25 +87,25 @@ export default function Theme() {
           <Space>
             Select Theme
 
-            <Select
-              defaultValue="lucy"
-              style={{
-                width: 250,
-              }}
-              onChange={handleChange}
-            >
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
-              <Option value="disabled" disabled>
-                Disabled
-              </Option>
-              <Option value="Yiminghe">yiminghe</Option>
-            </Select>
+            {
+              themes?.length ? <Select
+                value={selectTheme}
+                style={{
+                  width: 250,
+                }}
+                onChange={handleChange}
+              >
+                {
+                  themes.map(theme => <Option value={theme.theme_name}>{theme.theme_name}</Option>)
+                }
+              </Select> : ''
+            }
 
-            <Button type="primary">Apply</Button>
+            <Button type="primary" onClick={() => applyTheme()}>Apply</Button>
           </Space>
 
           <Form
+            form={form}
             layout={"vertical"}
             name="basic"
             onFinish={onFinish}
@@ -47,11 +115,11 @@ export default function Theme() {
               <Col className="gutter-row" span={12}>
                 <Form.Item
                   label="Theme Name"
-                  name="username"
+                  name="theme_name"
                   rules={[
                     {
                       required: true,
-                      message: 'Please input Shop Name!',
+                      message: 'Please input Theme Name!',
                     },
                   ]}
                 >
@@ -62,11 +130,11 @@ export default function Theme() {
               <Col className="gutter-row" span={12}>
                 <Form.Item
                   label="Topbar Background"
-                  name="username"
+                  name="dv_topbar_bg_color"
                   rules={[
                     {
                       required: true,
-                      message: 'Please input mobile number!',
+                      message: 'Please input Topbar Background!',
                     },
                   ]}
                 >
@@ -77,11 +145,11 @@ export default function Theme() {
               <Col className="gutter-row" span={12}>
                 <Form.Item
                   label="Topbar Foreground"
-                  name="username"
+                  name="dv_topbar_fg_color"
                   rules={[
                     {
                       required: true,
-                      message: 'Please input Email!',
+                      message: 'Please input Topbar Foreground!',
                     },
                   ]}
                 >
@@ -92,11 +160,11 @@ export default function Theme() {
               <Col className="gutter-row" span={12}>
                 <Form.Item
                   label="Background"
-                  name="username"
+                  name="dv_bg_color"
                   rules={[
                     {
                       required: true,
-                      message: 'Please input Address!',
+                      message: 'Please input Background!',
                     },
                   ]}
                 >
@@ -105,8 +173,7 @@ export default function Theme() {
               </Col>
             </Row>
 
-            <Form.Item className='text-right'
-            >
+            <Form.Item className='text-right'>
               <Button type="primary" htmlType="submit" >
                 Save
               </Button>

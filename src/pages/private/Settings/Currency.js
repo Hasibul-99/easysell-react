@@ -1,13 +1,41 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Checkbox, Space, Radio, Form, Input, Row, Col } from 'antd';
+import { getData, putData } from '../../../scripts/api-service';
+import { PERMANENT_VALUES } from '../../../scripts/api';
+import { alertPop } from '../../../scripts/helper';
 
 export default function Currency() {
-  const [value, setValue] = useState(1);
+  const [value, setValue] = useState('AED');
+  const [permanentValues, setPermanentValues] = useState();
 
   const onChange = (e) => {
-    console.log('radio checked', e.target.value);
     setValue(e.target.value);
   };
+
+  const getPermanentValues = async() => {
+    let res = await getData(PERMANENT_VALUES);
+
+    if (res) {
+      let masterData = res?.data?.length ? res.data[0] : '';
+      setPermanentValues(masterData);
+
+      setValue(masterData?.CURRENCY);
+    }
+  }
+
+  const updateCurrency = async () => {
+    permanentValues.CURRENCY = value;
+    
+    let res = await putData(PERMANENT_VALUES + permanentValues.Id, permanentValues);
+
+    if (res) {
+      alertPop('success', 'Update successfully');
+    }
+  }
+
+  useEffect(() => {
+    getPermanentValues()
+  }, [])
 
   return (
     <div>
@@ -15,13 +43,13 @@ export default function Currency() {
         Select Currency:
 
         <Radio.Group onChange={onChange} value={value}>
-          <Radio value={1}>Dollar($)</Radio>
-          <Radio value={2}>AED</Radio>
-          <Radio value={2}>Taka(৳)</Radio>
+          <Radio value={'Dollar'}>Dollar($)</Radio>
+          <Radio value={"AED"}>AED</Radio>
+          <Radio value={'BD'}>Taka(৳)</Radio>
         </Radio.Group>
       </Space>
       <br/>
-      <Button type="primary">Apply</Button>
+      <Button type="primary" onClick={() => updateCurrency()}>Apply</Button>
 
     </div>
   )

@@ -64,10 +64,10 @@ export default function CustomerReport() {
   return (
     <div>
       <Row gutter={16} className="mb-4">
-        <Col className="gutter-row" span={8}>
+        {/* <Col className="gutter-row" span={8}>
 
-        </Col>
-        <Col className="gutter-row" span={16}>
+        </Col> */}
+        <Col className="gutter-row" span={24}>
           <Table dataSource={customer} columns={columns} pagination={false} />
         </Col>
       </Row>

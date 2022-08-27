@@ -8,6 +8,7 @@ import { authContext } from "../../../context/AuthContext";
 import LineChart from './LineChart';
 import PieChart from './PieChart';
 import BarChart from './BarChart';
+import { inventory_add_readystock, payments, sold_root_table_pos } from '../../../scripts/api';
 const { RangePicker } = DatePicker;
 
 const { Search } = Input;
@@ -16,73 +17,105 @@ const { confirm } = Modal;
 
 export default function Channels() {
   const { user, setUserInfo } = useContext(authContext);
+  const [sell, setSell] = useState();
+  const [tableData, setTableData] = useState();
+  const [strckData, setStockData] = useState();
+  const [payment, setPayment] = useState()
 
-  const dataSource = [
-    {
-      key: '1',
-      name: 'Mike',
-      age: 32,
-      address: '10 Downing Street',
-    },
-    {
-      key: '2',
-      name: 'John',
-      age: 42,
-      address: '10 Downing Street',
-    },
-  ];
 
   const columns = [
     {
       title: 'SL NO',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'serial_no',
+      key: 'serial_no',
     },
     {
       title: 'Customer Name',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'customer_name',
+      key: 'customer_name',
     },
     {
       title: 'Customer Phone Number',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'customer_number',
+      key: 'customer_number',
     },
     {
       title: 'Customer Address',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'customer_address',
+      key: 'customer_address',
     },
     {
       title: 'Amount',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'total_amount',
+      key: 'total_amount',
     },
     {
       title: 'Status',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'status',
+      key: 'status',
     },
     {
       title: 'Paid',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'paid',
+      key: 'paid',
     },
     {
       title: 'Due',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'due',
+      key: 'due',
     },
     {
       title: 'Date',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'date',
+      key: 'date',
     },
   ];
 
+  const getPossellReport = async () => {
+    let res = await getData(sold_root_table_pos);
+
+    if (res) {
+      let masterData = res?.data;
+      setSell(masterData);
+      let items = [];
+
+      masterData.forEach(item => {
+        let startData = moment().subtract(7, 'd').format('YYYY-MM-DD'),
+            today = moment().format('YYYY-MM-DD'),
+            data = moment(item.date, 'MM/DD/YYYY hh:mm:ss A').format('YYYY-MM-DD');
+
+        let issameorafter = moment(data).isSameOrAfter(startData),
+            isBefore = moment(data).isBefore(today);
+
+        if (issameorafter && isBefore) {
+          items.push(item);
+        }
+      });
+
+      setTableData(items);
+    }
+  }
+
+  const getReadyStock = async () => {
+    let res = await getData(inventory_add_readystock);
+
+    if (res) {
+      setStockData(res?.data);
+    }
+  }
+
+  const getPaymentReport = async () => {
+    let res = await getData(payments);
+
+    if (res) {
+      setPayment(res?.data);
+    }
+  }
 
   useEffect(() => {
-
+    getPossellReport();
+    getReadyStock();
+    getPaymentReport()
   }, [])
 
   return <div className='page-content'>
@@ -214,20 +247,17 @@ export default function Channels() {
               </div>
             </div>
           </div>
-
-
-
         </div>
       </div>
     </div>
 
     <Row gutter={16}>
       <Col className="gutter-row" span={14}>
-        <LineChart></LineChart>
+        <LineChart payment={payment}></LineChart>
       </Col>
 
       <Col className="gutter-row" span={10}>
-        <PieChart></PieChart>
+        <PieChart payment={payment}></PieChart>
       </Col>
     </Row>
 
@@ -236,20 +266,14 @@ export default function Channels() {
         <Col className="gutter-row" span={12}>
           <h4 className='mb-3'>Last 7 days Sells</h4>
         </Col>
-        <Col className="gutter-row" span={12}>
-          <RangePicker className='mv-4' ranges={{
-            Today: [moment(), moment()],
-            'This Month': [moment().startOf('month'), moment().endOf('month')],
-          }} />
-        </Col>
       </Row>
 
-      <Table dataSource={dataSource} columns={columns} pagination={false} />;
+      <Table dataSource={tableData} columns={columns} pagination={false} />;
     </Card>
 
     <Row gutter={16}>
       <Col className="gutter-row" span={24}>
-        <BarChart></BarChart>
+        <BarChart strckData={strckData}></BarChart>
       </Col>
     </Row>
   </div>;

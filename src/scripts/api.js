@@ -31,4 +31,6 @@ export const return_products = "return_products";
 export const shop_info_values = "shop_info_values/"
 export const theme_color = "theme_color/"
 
+//row product
+export const inventory_add_rowstock = "inventory_add_rowstock/"
 

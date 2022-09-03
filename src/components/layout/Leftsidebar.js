@@ -116,6 +116,12 @@ export default function Leftsidebar() {
                   <span className="link-title ml-3">Settings</span>
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link to="/vendore" className="nav-link">
+                  {server}
+                  <span className="link-title ml-3">Vendore</span>
+                </Link>
+              </li>
               {/* <li className="nav-item">
           <a className="nav-link" data-bs-toggle="collapse" href="#emails" role="button" aria-expanded="false" aria-controls="emails">
             <i className="link-icon" data-feather="mail" />

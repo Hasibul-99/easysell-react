@@ -32,5 +32,8 @@ export const shop_info_values = "shop_info_values/"
 export const theme_color = "theme_color/"
 
 //row product
-export const inventory_add_rowstock = "inventory_add_rowstock/"
+export const inventory_add_rowstock = "inventory_add_rowstock/";
+export const vendor_list = "vendor_list/"
+export const vendor_list_readyProduct = "vendor_list_ready_distinct/"
+export const vendor_list_rowProduct = "vendor_list_row_distinct/"
 

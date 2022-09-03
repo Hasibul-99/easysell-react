@@ -16,6 +16,7 @@ import ReportStatement from "../pages/private/ReportAndStatement";
 import ReturnedProducts from "../pages/private/returned-products";
 import Settings from "../pages/private/Settings";
 import RowProducts from "../pages/private/RowProducts";
+import Vendore from "../pages/private/Vendore";
 
 const PrivateRoutes = [
     {
@@ -134,6 +135,13 @@ const PrivateRoutes = [
         path: "row-products",
         name: "Row Products",
         component: RowProducts,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "vendore",
+        name: "Vendore",
+        component: Vendore,
         layout: "/",
         exact: true
     },

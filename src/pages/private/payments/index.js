@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Table, Button, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
 import { getData, postData, putData } from '../../../scripts/api-service';
 import { payments } from '../../../scripts/api';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import ExportTable from '../../../components/ExportTable/table';
 
 export default function Payments() {
+  const generalRef = useRef(null);
   const [form] = Form.useForm();
   const [expenses, setExpenses] = useState([]);
   const [allExpenses, setAllExpemses] = useState([]);
@@ -65,6 +67,53 @@ export default function Payments() {
     }
   }
 
+  const exportColums = [
+    {
+      title: 'Serial no',
+      dataIndex: 'serial_no',
+      key: 'serial_no',
+    },
+    {
+      title: 'Reason',
+      dataIndex: 'reason',
+      key: 'v',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status'
+    },
+    {
+      title: 'Amount',
+      key: 'amount',
+      dataIndex: 'amount'
+    },
+    {
+      title: 'Paid',
+      dataIndex: 'paid',
+      key: 'paid',
+    },
+    {
+      title: 'Due',
+      key: 'due',
+      dataIndex: 'due',
+    },
+    {
+      title: 'Paid Date',
+      key: 'paid_date',
+      dataIndex: 'paid_date',
+    },
+    {
+      title: 'Pad By',
+      key: 'paid_by',
+      dataIndex: 'paid_by'
+    },
+    {
+      title: 'Number',
+      key: 'his_number',
+      dataIndex: 'his_number'
+    }
+  ];
   
   const columns = [
     {
@@ -158,6 +207,14 @@ export default function Payments() {
     setIsModalBanned(true);
   }
 
+  const generateReport = () => {
+    generalRef.current.generateReport();
+  }
+
+  const prientReport = () => {
+    generalRef.current.prientReport();
+  }
+
   useEffect(() => {
     getExpensess()
   }, [])
@@ -175,7 +232,7 @@ export default function Payments() {
 
       <Card>
         <Row className='mb-5'>
-          <Col span={12}>
+          <Col span={8}>
             <Form name="horizontal_login" layout="inline" onFinish={onFinishSearch}>
               <Form.Item
                 name="user_id"
@@ -202,6 +259,12 @@ export default function Payments() {
                 )}
               </Form.Item>
             </Form>
+          </Col>
+
+          <Col span={8} offset={8}>
+            <Button type="primary" onClick={() => generateReport()}>Generate Report</Button>
+
+            <Button type="primary" className='ml-4' onClick={() => prientReport()}>Prient</Button>
           </Col>
         </Row>
 
@@ -319,6 +382,9 @@ export default function Payments() {
           </Form.Item>
         </Form>
       </Modal>
+
+      <ExportTable exportColums={exportColums} ref={generalRef}
+        dataSource={expenses}></ExportTable>
     </div>
   )
 }

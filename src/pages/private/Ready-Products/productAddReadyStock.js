@@ -1,27 +1,42 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
     Card, Row, Col, Button, Space, Input, Table, Modal, InputNumber,
     Form, Radio, Divider, Checkbox
 } from 'antd';
 import { inventory_add_readystock } from "../../../scripts/api";
-import { postData } from "../../../scripts/api-service";
+import { postData, putData } from "../../../scripts/api-service";
 
 
 
-export default function ProductAddReadyStock({setVisible, getReadyStock}) {
+export default function ProductAddReadyStock({ setVisible, getReadyStock, selected }) {
     const [form] = Form.useForm();
 
     const onFinish = async (values) => {
-        values.Id = Math.floor(Math.random() * 100000);
-        let res = await postData(inventory_add_readystock, values);
+        values.Id = selected?.Id ? selected?.Id : Math.floor(Math.random() * 100000);
+        let url = selected?.Id ? inventory_add_readystock + selected?.Id : inventory_add_readystock;
 
-        if (res) {
-            setVisible(false);
+        if (selected?.Id) {
+            let res = await putData(url, values);
 
-            setTimeout(() => {
-                getReadyStock();
-            }, 200)
+            if (res) {
+                setVisible(false);
+
+                setTimeout(() => {
+                    getReadyStock();
+                }, 200)
+            }
+        } else {
+            let res = await postData(url, values);
+
+            if (res) {
+                setVisible(false);
+
+                setTimeout(() => {
+                    getReadyStock();
+                }, 200)
+            }
         }
+
     };
 
     const generateBarcode = () => {
@@ -29,6 +44,13 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
 
         form.setFieldsValue({ p_barcode: value });
     }
+
+    useEffect(() => {
+        if (selected) {
+            console.log("selected", selected);
+            form.setFieldsValue(selected);
+        }
+    }, [selected])
 
     return (
         <>
@@ -53,7 +75,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                         </Form.Item>
                     </Col>
                     <Col className="gutter-row" span={12}>
-                        <Button type="primary" style={{ marginTop: '2rem' }} 
+                        <Button type="primary" style={{ marginTop: '2rem' }}
                             onClick={generateBarcode}>generate</Button>
                     </Col>
                 </Row>
@@ -84,7 +106,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                 },
                             ]}
                         >
-                            <InputNumber  style={{width: "100%"}} />
+                            <InputNumber style={{ width: "100%" }} />
                         </Form.Item>
                     </Col>
                     <Col className="gutter-row" span={6}>
@@ -98,7 +120,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                 },
                             ]}
                         >
-                            <Input  style={{width: "100%"}}/>
+                            <Input style={{ width: "100%" }} />
                         </Form.Item>
                     </Col>
                 </Row>
@@ -115,7 +137,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                 },
                             ]}
                         >
-                            <InputNumber  style={{width: "100%"}}/>
+                            <InputNumber style={{ width: "100%" }} />
                         </Form.Item>
                     </Col>
                     <Col className="gutter-row" span={12}>
@@ -153,7 +175,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                             },
                                         ]}
                                     >
-                                        <InputNumber  style={{width: "100%"}}/>
+                                        <InputNumber style={{ width: "100%" }} />
                                     </Form.Item>
                                 </Col>
                                 <Col className="gutter-row" span={12}>
@@ -167,7 +189,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                             },
                                         ]}
                                     >
-                                        <InputNumber  style={{width: "100%"}}/>
+                                        <InputNumber style={{ width: "100%" }} />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -184,7 +206,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                             },
                                         ]}
                                     >
-                                        <InputNumber  style={{width: "100%"}}/>
+                                        <InputNumber style={{ width: "100%" }} />
                                     </Form.Item>
                                 </Col>
                                 <Col className="gutter-row" span={12}>
@@ -198,7 +220,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                             },
                                         ]}
                                     >
-                                        <InputNumber  style={{width: "100%"}}/>
+                                        <InputNumber style={{ width: "100%" }} />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -221,7 +243,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                             },
                                         ]}
                                     >
-                                        <InputNumber  style={{width: "100%"}}/>
+                                        <InputNumber style={{ width: "100%" }} />
                                     </Form.Item>
                                 </Col>
                                 <Col className="gutter-row" span={12}>
@@ -235,24 +257,24 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                                             },
                                         ]}
                                     >
-                                        <InputNumber  style={{width: "100%"}}/>
+                                        <InputNumber style={{ width: "100%" }} />
                                     </Form.Item>
                                 </Col>
-                                    <Col className="gutter-row" span={12}>
-                                        <Form.Item
-                                            label="Low Alert at"
-                                            name="low_alert"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Please input Low Alert at!',
-                                                },
-                                            ]}
-                                        >
-                                            <InputNumber  style={{width: "100%"}}/>
-                                        </Form.Item>
-                                    </Col>
-                                    {/* <Col className="gutter-row" span={12}>
+                                <Col className="gutter-row" span={12}>
+                                    <Form.Item
+                                        label="Low Alert at"
+                                        name="low_alert"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please input Low Alert at!',
+                                            },
+                                        ]}
+                                    >
+                                        <InputNumber style={{ width: "100%" }} />
+                                    </Form.Item>
+                                </Col>
+                                {/* <Col className="gutter-row" span={12}>
                                     <Form.Item
                                         label="Total"
                                         name="username"
@@ -329,7 +351,7 @@ export default function ProductAddReadyStock({setVisible, getReadyStock}) {
                     <Button type="primary" htmlType="submit" style={{ float: 'right' }}>
                         Submit
                     </Button>
-                    <Button type="primary" onClick={() => setVisible(false)} 
+                    <Button type="primary" onClick={() => setVisible(false)}
                         danger ghost style={{ float: 'right', marginRight: '1rem' }}>
                         Danger
                     </Button>

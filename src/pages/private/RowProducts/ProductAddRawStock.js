@@ -1,35 +1,53 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 import {
     Card, Row, Col, Button, Space, Input, Table, Modal, InputNumber,
     Form, Radio, Divider, Checkbox
 } from 'antd';
 import { inventory_add_rowstock } from "../../../scripts/api";
-import { postData } from "../../../scripts/api-service";
+import { postData, putData } from "../../../scripts/api-service";
 import moment from 'moment';
 
 
-export default function ProductAddRawStock({ setVisible, getReadyStock }) {
+export default function ProductAddRawStock({ setVisible, getReadyStock, selected }) {
     const [form] = Form.useForm();
 
     const onFinish = async (values) => {
-        values.Id = Math.floor(Math.random() * 100000);
-        values.date = moment().format("MM/DD/YYYY");
+        values.Id = selected?.Id ? selected?.Id : Math.floor(Math.random() * 100000);
+        values.date = selected?.date ? selected?.date : moment().format("MM/DD/YYYY");
 
-        let res = await postData(inventory_add_rowstock, values);
+        if (selected?.Id ) {
+            let res = await putData(inventory_add_rowstock + selected.Id, values);
 
-        if (res) {
-            setVisible(false);
+            if (res) {
+                setVisible(false);
+    
+                setTimeout(() => {
+                    getReadyStock();
+                }, 200)
+            }
+        } else {
+            let res = await postData(inventory_add_rowstock, values);
 
-            setTimeout(() => {
-                getReadyStock();
-            }, 200)
+            if (res) {
+                setVisible(false);
+    
+                setTimeout(() => {
+                    getReadyStock();
+                }, 200)
+            }
         }
     };
 
     const generateBarcode = () => {
         let value = Math.floor(Math.random() * 10000000000);
         form.setFieldsValue({ p_barcode: value });
-    }
+    };
+
+    useEffect(() => {
+        if (selected) {
+            form.setFieldsValue(selected);
+        }
+    }, [selected])
 
     return (
         <>

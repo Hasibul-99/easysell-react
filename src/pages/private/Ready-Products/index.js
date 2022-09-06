@@ -2,10 +2,12 @@ import {
     Card, Row, Col, Button, Space, Input, Table, Modal,
     Form, Radio, Divider, Checkbox
 } from 'antd'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, } from 'react';
 import ProductAddReadyStock from "./productAddReadyStock";
-import {inventory_add_readystock} from "../../../scripts/api";
-import {getData} from "../../../scripts/api-service";
+import { inventory_add_readystock } from "../../../scripts/api";
+import { getData } from "../../../scripts/api-service";
+import ExportTable from '../../../components/ExportTable/table';
+
 
 const { Search } = Input;
 
@@ -54,12 +56,90 @@ const columns = [
         title: 'Buy Price Per Unit',
         dataIndex: 'supply_ppu',
         key: 'supply_ppu',
-    }, 
+    },
     {
         title: 'Sell Price Per Unit',
         dataIndex: 'sell_ppu',
         key: 'sell_ppu',
-    }, 
+    },
+    {
+        title: 'Discount',
+        dataIndex: 'discount',
+        key: 'discount',
+    },
+    {
+        title: 'Supplie',
+        dataIndex: 'supplier',
+        key: 'supplier',
+    },
+    {
+        title: 'Tax',
+        dataIndex: 'tax',
+        key: 'tax',
+    },
+    {
+        title: 'Allow Change on ',
+        dataIndex: 'allow_change_on_edit',
+        key: 'allow_change_on_edit',
+    }, {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+    }
+];
+
+
+const exportColums = [
+    {
+        title: 'Product Name',
+        dataIndex: 'p_name',
+        key: 'p_name',
+    },
+    {
+        title: 'Product Code',
+        dataIndex: 'p_code',
+        key: 'p_code',
+    },
+    {
+        title: 'Product Barcode',
+        dataIndex: 'p_barcode',
+        key: 'p_barcode',
+    },
+    {
+        title: 'Net Amount',
+        dataIndex: 'net_amount',
+        key: 'net_amount',
+    },
+    {
+        title: 'Net Amount Type',
+        dataIndex: 'net_amount_type',
+        key: 'net_amount_type',
+    },
+    {
+        title: 'Categori',
+        dataIndex: 'category',
+        key: 'category',
+    },
+    {
+        title: 'Stock',
+        dataIndex: 'in_stock',
+        key: 'in_stock',
+    },
+    {
+        title: 'Low Stock Alert',
+        dataIndex: 'low_alert',
+        key: 'low_alert',
+    },
+    {
+        title: 'Buy Price Per Unit',
+        dataIndex: 'supply_ppu',
+        key: 'supply_ppu',
+    },
+    {
+        title: 'Sell Price Per Unit',
+        dataIndex: 'sell_ppu',
+        key: 'sell_ppu',
+    },
     {
         title: 'Discount',
         dataIndex: 'discount',
@@ -87,6 +167,7 @@ const columns = [
 ];
 
 export default function ReadyProducts() {
+    const generalRef = useRef(null);
     const [visible, setVisible] = useState(false);
     const onSearch = (value) => console.log(value);
     const [stocks, setStocks] = useState([]);
@@ -101,6 +182,14 @@ export default function ReadyProducts() {
             setStocks(res?.data || []);
         }
     };
+
+    const generateReport = () => {
+        generalRef.current.generateReport();
+    }
+
+    const prientReport = () => {
+        generalRef.current.prientReport();
+    }
 
     useEffect(() => {
         getReadyStock();
@@ -124,6 +213,11 @@ export default function ReadyProducts() {
                         <div className='mt-3'>
                             <Search placeholder="input search text" onSearch={onSearch} style={{ width: "70%" }} />
                         </div>
+                        <div className='mt-3'>
+                            <Button type="primary" onClick={() => generateReport()}>Generate Report</Button>
+
+                            <Button type="primary" className='ml-4' onClick={() => prientReport()}>Prient</Button>
+                        </div>
                     </Col>
                 </Row>
             </Card>
@@ -142,10 +236,13 @@ export default function ReadyProducts() {
                 width={1000}
                 onCancel={() => { setVisible(false) }}
             >
-                <ProductAddReadyStock 
+                <ProductAddReadyStock
                     setVisible={setVisible}
-                    getReadyStock={getReadyStock}/>
+                    getReadyStock={getReadyStock} />
             </Modal>
+
+            <ExportTable exportColums={exportColums} ref={generalRef}
+                dataSource={stocks}></ExportTable>
         </div>
     )
 }

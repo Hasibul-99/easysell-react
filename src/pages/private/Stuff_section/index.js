@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Table, Button, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
 import { getData, postData, putData } from '../../../scripts/api-service';
 import { USERAC, easy_permission_products } from '../../../scripts/api';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import ExportTable from '../../../components/ExportTable/table';
 
 export default function StuffSection() {
+    const generalRef = useRef(null);
     const [form] = Form.useForm();
     const [expenses, setExpenses] = useState([]);
     const [allExpenses, setAllExpemses] = useState([]);
@@ -60,12 +62,12 @@ export default function StuffSection() {
         }
     };
 
-    const assignPermissions = async(number, values, context) => {
+    const assignPermissions = async (number, values, context) => {
         let data = {
             number: number
         };
 
-        Object.keys(permissions).forEach(function(key) {
+        Object.keys(permissions).forEach(function (key) {
             data[key] = values[key] ? 1 : 0;
         });
 
@@ -74,8 +76,8 @@ export default function StuffSection() {
         } else {
             await postData(easy_permission_products, data);
         }
-        
-    } 
+
+    }
 
     const onFinishSearch = (values) => {
         console.log('Success:', values);
@@ -133,6 +135,24 @@ export default function StuffSection() {
         },
     ];
 
+    const exportColums = [
+        {
+            title: 'Name',
+            dataIndex: 'Name',
+            key: 'Name',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'Email',
+            key: 'Email',
+        },
+        {
+            title: 'Number',
+            dataIndex: 'Number',
+            key: 'Number'
+        }
+    ];
+
     const updateExpenses = (item) => {
         form.setFieldsValue({
             Email: item.Email,
@@ -147,14 +167,14 @@ export default function StuffSection() {
         setIsModalBanned(true);
     }
 
-    const getSelectedUserPermissions = async(number) => {
-        let res = await getData(easy_permission_products+ number);
+    const getSelectedUserPermissions = async (number) => {
+        let res = await getData(easy_permission_products + number);
 
         if (res) {
             let masterData = res?.data || {},
-                fiels= {};
+                fiels = {};
 
-            Object.keys(masterData).forEach(function(key) {
+            Object.keys(masterData).forEach(function (key) {
                 fiels[key] = !!masterData[key]
             });
 
@@ -179,6 +199,13 @@ export default function StuffSection() {
     const onChange = (checkedValues) => {
         console.log('checked = ', checkedValues);
     };
+    const generateReport = () => {
+        generalRef.current.generateReport();
+    }
+
+    const prientReport = () => {
+        generalRef.current.prientReport();
+    }
 
     useEffect(() => {
         getPermissions()
@@ -198,7 +225,7 @@ export default function StuffSection() {
 
             <Card>
                 <Row className='mb-5'>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Form name="horizontal_login" layout="inline" onFinish={onFinishSearch}>
                             <Form.Item
                                 name="user_id"
@@ -218,6 +245,11 @@ export default function StuffSection() {
                                 )}
                             </Form.Item>
                         </Form>
+                    </Col>
+                    <Col span={8} offset={8}>
+                        <Button type="primary" onClick={() => generateReport()}>Generate Report</Button>
+
+                        <Button type="primary" className='ml-4' onClick={() => prientReport()}>Prient</Button>
                     </Col>
                 </Row>
 
@@ -315,6 +347,10 @@ export default function StuffSection() {
                     </Form.Item>
                 </Form>
             </Modal>
+
+
+            <ExportTable exportColums={exportColums} ref={generalRef}
+                dataSource={expenses}></ExportTable>
         </div>
     )
 }

@@ -2,10 +2,11 @@ import {
     Card, Row, Col, Button, Space, Input, Table, Modal,
     Form, Radio, Divider, Checkbox
 } from 'antd'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ProductAddRawStock from "./ProductAddRawStock";
 import {inventory_add_rowstock} from "../../../scripts/api";
 import {getData} from "../../../scripts/api-service";
+import ExportTable from '../../../components/ExportTable/table';
 
 const { Search } = Input;
 
@@ -77,7 +78,77 @@ const columns = [
     }
 ];
 
+
+const exportColums = [
+    {
+        title: 'Product Name',
+        dataIndex: 'p_name',
+        key: 'p_name',
+    },
+    {
+        title: 'Product Code',
+        dataIndex: 'p_code',
+        key: 'p_code',
+    },
+    {
+        title: 'Product Barcode',
+        dataIndex: 'p_barcode',
+        key: 'p_barcode',
+    },
+    {
+        title: 'Net Amount',
+        dataIndex: 'net_amount',
+        key: 'net_amount',
+    },
+    {
+        title: 'Net Amount Type',
+        dataIndex: 'net_amount_type',
+        key: 'net_amount_type',
+    },
+    {
+        title: 'Category',
+        dataIndex: 'category',
+        key: 'category',
+    },
+    {
+        title: 'Stock',
+        dataIndex: 'in_stock',
+        key: 'in_stock',
+    },
+    {
+        title: 'Low Stock Alert',
+        dataIndex: 'low_alert',
+        key: 'low_alert',
+    },
+    {
+        title: 'Supply Price Per Unit',
+        dataIndex: 'supply_ppu',
+        key: 'supply_ppu',
+    }, 
+    {
+        title: 'Sell Price Per Unit',
+        dataIndex: 'sell_ppu',
+        key: 'sell_ppu',
+    },
+    {
+        title: 'Supplie',
+        dataIndex: 'supplier',
+        key: 'supplier',
+    },
+    {
+        title: 'Tax',
+        dataIndex: 'tax',
+        key: 'tax',
+    },
+    {
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
+    }
+];
+
 export default function RowProducts() {
+    const generalRef = useRef(null);
     const [visible, setVisible] = useState(false);
     const onSearch = (value) => console.log(value);
     const [stocks, setStocks] = useState([]);
@@ -92,6 +163,14 @@ export default function RowProducts() {
             setStocks(res?.data || []);
         }
     };
+
+    const generateReport = () => {
+        generalRef.current.generateReport();
+    }
+
+    const prientReport = () => {
+        generalRef.current.prientReport();
+    }
 
     useEffect(() => {
         getReadyStock();
@@ -115,6 +194,12 @@ export default function RowProducts() {
                         <div className='mt-3'>
                             <Search placeholder="input search text" onSearch={onSearch} style={{ width: "70%" }} />
                         </div>
+
+                        <div className='mt-3'>
+                            <Button type="primary" onClick={() => generateReport()}>Generate Report</Button>
+
+                            <Button type="primary" className='ml-4' onClick={() => prientReport()}>Prient</Button>
+                        </div>
                     </Col>
                 </Row>
             </Card>
@@ -137,6 +222,9 @@ export default function RowProducts() {
                     setVisible={setVisible}
                     getReadyStock={getReadyStock}/>
             </Modal>
+
+            <ExportTable exportColums={exportColums} ref={generalRef}
+                dataSource={stocks}></ExportTable>
         </div>
     )
 }

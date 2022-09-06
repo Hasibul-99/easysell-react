@@ -42,7 +42,7 @@ const ExportTable = forwardRef((props, ref) => {
                     </tr>
 
                     {
-                        dataSource.length && dataSource.map((item, i) => <>
+                        dataSource?.length && dataSource.map((item, i) => <>
                             <tr key={'first-' + i}>
                                 {exportColums.map((data, i) => <td>{item[data.dataIndex]}</td>)}
                             </tr>

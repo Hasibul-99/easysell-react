@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Table, Button, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
 import { getData, postData, putData } from '../../../scripts/api-service';
 import { SUPLIER_STUFF } from '../../../scripts/api';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import ExportTable from '../../../components/ExportTable/table';
 
 export default function SuplierStuff() {
+    const generalRef = useRef(null);
     const [form] = Form.useForm();
     const [expenses, setExpenses] = useState([]);
     const [allExpenses, setAllExpemses] = useState([]);
@@ -134,6 +136,49 @@ export default function SuplierStuff() {
         },
     ];
 
+    const exportColums = [
+        {
+            title: 'Expense no',
+            dataIndex: 'e_no',
+            key: 'e_no',
+        },
+        {
+            title: 'Staff name',
+            dataIndex: 's_name',
+            key: 's_name',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status'
+        },
+        {
+            title: 'Amount',
+            key: 'amount',
+            dataIndex: 'amount'
+        },
+        {
+            title: 'Reason',
+            key: 'amount',
+            dataIndex: 'amount'
+        },
+        {
+            title: 'Paid',
+            dataIndex: 'paid',
+            key: 'paid',
+        },
+        {
+            title: 'Due',
+            key: 'due',
+            dataIndex: 'due',
+        },
+        {
+            title: 'Date',
+            key: 'date',
+            dataIndex: 'date',
+        }
+    ];
+
     const updateExpenses = (item) => {
         form.setFieldsValue({
             amount: item.amount,
@@ -147,6 +192,15 @@ export default function SuplierStuff() {
 
         setSelectedExpense(item);
         setIsModalBanned(true);
+    }
+
+
+    const generateReport = () => {
+        generalRef.current.generateReport();
+    }
+
+    const prientReport = () => {
+        generalRef.current.prientReport();
     }
 
     useEffect(() => {
@@ -166,7 +220,7 @@ export default function SuplierStuff() {
 
             <Card>
                 <Row className='mb-5'>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Form name="horizontal_login" layout="inline" onFinish={onFinishSearch}>
                             <Form.Item
                                 name="user_id"
@@ -194,13 +248,18 @@ export default function SuplierStuff() {
                             </Form.Item>
                         </Form>
                     </Col>
+                    <Col span={8} offset={8}>
+                        <Button type="primary" onClick={() => generateReport()}>Generate Report</Button>
+
+                        <Button type="primary" className='ml-4' onClick={() => prientReport()}>Prient</Button>
+                    </Col>
                 </Row>
 
                 <Table columns={columns} dataSource={expenses} scroll={{ x: 900 }} />
             </Card>
 
             <Modal
-                title={ selectedExpense ? 'Update Stuff' : "Stuff Add" }
+                title={selectedExpense ? 'Update Stuff' : "Stuff Add"}
                 visible={isModalBanned}
                 footer={false}
                 onCancel={() => { setIsModalBanned(false); setSelectedExpense(null) }}>
@@ -281,6 +340,10 @@ export default function SuplierStuff() {
                     </Form.Item>
                 </Form>
             </Modal>
+
+
+      <ExportTable exportColums={exportColums} ref={generalRef}
+        dataSource={expenses}></ExportTable>
         </div>
     )
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Col, Row, Table, Input, Checkbox, Button, Modal, Form, InputNumber } from 'antd';
 
 import { getData, postData } from '../../../scripts/api-service';
-import { CUSTOMER_LIST, SOLD_ROOT_TABLE } from '../../../scripts/api';
+import { CUSTOMER_LIST, sold_child_table_pos, SOLD_ROOT_TABLE } from '../../../scripts/api';
 import { alertPop } from '../../../scripts/helper';
 
 export default function SellModel(props) {
@@ -18,6 +18,26 @@ export default function SellModel(props) {
 
         let res = await postData(SOLD_ROOT_TABLE, values);
 
+        if (selectedStocks?.length) {
+            selectedStocks.forEach(item => {
+                let data = {
+                    pk_no: Math.floor(Math.random() * 1000000),
+                    Id: item.Id,
+                    serial_no: serialNum,
+                    p_name: item.p_name,
+                    qty: item.qty,
+                    taka: (((item.qty*1) || 0) * ((item.sell_ppu*1) || 0)),
+                    p_code: item.p_code,
+                    p_rate: item.sell_ppu,
+                    n_instock: item.in_stock,
+                    p_barcode: item.p_barcode,
+                    p_rate_buy: item.supply_ppu
+                };
+
+                postData(sold_child_table_pos, data);
+            })
+        }
+
         if (res) {
             customerAdd(values)
             console.log("rteeetre5ry", res);
@@ -26,11 +46,11 @@ export default function SellModel(props) {
         }
     };
 
-    const customerAdd  = async (values) => {
+    const customerAdd = async (values) => {
         let res = await postData(CUSTOMER_LIST, values);
-    
+
         if (res) {
-          alertPop('success', 'Customer add successfully');
+            alertPop('success', 'Customer add successfully');
         }
     }
 
@@ -85,6 +105,10 @@ export default function SellModel(props) {
                 layout={"vertical"}
                 onFinish={onFinish}
                 autoComplete="off"
+                initialValues={{
+                    paid: (showAmount() + showTaxAmount()) || 0,
+                    due: 0
+                }}
             >
                 <Row gutter={16}>
                     <Col className="gutter-row" span={12}>

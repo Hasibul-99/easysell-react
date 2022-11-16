@@ -36,8 +36,10 @@ export const inventory_add_rowstock = "inventory_add_rowstock/";
 export const vendor_list = "vendor_list/"
 export const vendor_list_readyProduct = "vendor_list_ready_distinct/"
 export const vendor_list_rowProduct = "vendor_list_row_distinct/"
-
 export const vendor_list_payment_readyProduct = "vendor_list_payment_readyProduct/"
 
+
+export const sold_child_table = "sold_child_table/";
+export const sold_child_table_pos = "sold_child_table_pos/";
 //
 

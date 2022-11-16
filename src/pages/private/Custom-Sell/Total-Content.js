@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Card, Button, Form, Input, Row, Col, Modal, Checkbox } from 'antd'
 import { getData, postData } from '../../../scripts/api-service';
-import { CUSTOMER_LIST, SOLD_ROOT_TABLE } from '../../../scripts/api';
+import { CUSTOMER_LIST, sold_child_table, SOLD_ROOT_TABLE } from '../../../scripts/api';
 import { alertPop } from '../../../scripts/helper';
 
 export default function TotalContent(props) {
@@ -36,6 +36,26 @@ export default function TotalContent(props) {
     values.Id = Math.floor(Math.random() * 1000000);
 
     let res = await postData(SOLD_ROOT_TABLE, values);
+
+    if (temData?.length) {
+      temData.forEach(item => {
+        let data = {
+          pk_no: Math.floor(Math.random() * 1000000),
+          Id: item.id,
+          serial_no: item.serial_key,
+          p_name: item.p_name,
+          qty: item.qty,
+          taka: item.taka,
+          p_code: item.p_code,
+          p_rate: item.p_rate, 
+          n_instock: item.n_inStock,
+          p_barcode: item.p_barcode,
+          p_rate_buy: item.p_rate_buy
+        }
+
+        postData(sold_child_table, data)
+      })
+    } 
 
     if (res) {
       customerAdd(values)
@@ -120,6 +140,10 @@ export default function TotalContent(props) {
           layout={"vertical"}
           onFinish={onFinish}
           autoComplete="off"
+          initialValues={{
+            paid: (calculateTotalAmount() + showTaxAmount()) || 0,
+            due: 0
+          }}
         >
           <Row gutter={16}>
             <Col className="gutter-row" span={12}>

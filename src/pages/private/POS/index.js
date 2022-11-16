@@ -256,7 +256,7 @@ export default function POS() {
                 footer={false}
                 onCancel={() => { setSellModel(false) }}>
                 <SellModel selectedStocks={selectedStocks} serialNum={serialNum}
-                    setSellModel={setSellModel}></SellModel>
+                    setSellModel={setSellModel} permanetValues={permanetValues}></SellModel>
             </Modal>
         </div>
     )

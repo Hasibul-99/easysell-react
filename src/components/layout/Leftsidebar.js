@@ -7,9 +7,11 @@ import {
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Link } from 'react-router-dom';
+import {
+  ShopOutlined, ShoppingOutlined, MoneyCollectOutlined, BoxPlotOutlined,
+  HeatMapOutlined, DatabaseOutlined, ContainerOutlined
+} from '@ant-design/icons';
 import { authContext } from "../../context/AuthContext";
-import { ShopOutlined, ShoppingOutlined, MoneyCollectOutlined, BoxPlotOutlined,
-  HeatMapOutlined, DatabaseOutlined, ContainerOutlined, AlertOutlined } from '@ant-design/icons';
 
 export default function Leftsidebar() {
   const { user, setUserInfo, permissions } = useContext(authContext);
@@ -93,7 +95,6 @@ export default function Leftsidebar() {
                   </ul>
                 </div>
               </li>
-              {/* 
               <li className="nav-item">
                 <a className="nav-link" data-bs-toggle="collapse" href="#Employee"
                   role="button" aria-expanded="false" aria-controls="Employee">
@@ -117,17 +118,6 @@ export default function Leftsidebar() {
                     </li>
                   </ul>
                 </div>
-                <Link to="/row-products" className="nav-link">
-                  {server}
-                  <span className="link-title ml-3">Raw Product</span>
-                </Link>
-              </li> 
-              */}
-              <li className="nav-item">
-                <Link to="/suplier_stuff" className="nav-link">
-                  {server}
-                  <span className="link-title ml-3">Supplier Staff</span>
-                </Link>
               </li>
 
               <li className="nav-item">

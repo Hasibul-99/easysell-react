@@ -1,11 +1,46 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Table, Button, Tabs, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
 import { getData } from '../../../../scripts/api-service';
 import { inventory_add_readystock } from '../../../../scripts/api';
+import ExportTable from '../../../../components/ExportTable/table';
 
 export default function UseInSells() {
+    const generalRef = useRef(null);
     const [stockData, setStockData] = useState();
     const [totalStockPrice, setTotalStockPrice] = useState(0);
+
+    const exportColums = [
+        {
+            title: 'SL NO',
+            dataIndex: 'p_name',
+            key: 'p_name',
+        },
+        {
+            title: 'Customer Phone Number',
+            dataIndex: 'p_barcode',
+            key: 'p_barcode',
+        },
+        {
+            title: 'Customer Name',
+            dataIndex: 'in_stock',
+            key: 'in_stock',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'net_amount',
+            key: 'net_amount',
+        },
+        {
+            title: 'Due',
+            dataIndex: 'net_amount',
+            key: 'net_amount',
+        },
+        {
+            title: 'Date',
+            dataIndex: 'net_amount',
+            key: 'net_amount',
+        }
+    ];
 
     const columns = [
         {
@@ -57,13 +92,37 @@ export default function UseInSells() {
             setStockData(filter)
         }
     }
+
+
+    const generateReport = () => {
+        generalRef.current.generateReport();
+    }
+
+    const prientReport = () => {
+        generalRef.current.prientReport();
+    }
+
     useEffect(() => {
         getStockData()
     }, [])
     return (
         <div>
+            <Row className='mb-5'>
+                <Col span={8}>
 
+                </Col>
+
+                <Col span={8} offset={8}>
+                    <Button type="primary" onClick={() => generateReport()}>Generate Report</Button>
+
+                    <Button type="primary" className='ml-4' onClick={() => prientReport()}>Prient</Button>
+                </Col>
+            </Row>
             <Table dataSource={stockData} columns={columns} pagination={false} />;
+
+
+            <ExportTable exportColums={exportColums} ref={generalRef}
+                dataSource={stockData}></ExportTable>
         </div>
     )
 }

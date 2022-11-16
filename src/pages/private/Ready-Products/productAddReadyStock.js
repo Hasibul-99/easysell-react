@@ -7,9 +7,7 @@ import { inventory_add_readystock } from "../../../scripts/api";
 import { postData, putData } from "../../../scripts/api-service";
 import moment from 'moment';
 
-
-
-export default function ProductAddReadyStock({ setVisible, selectedProduct, getReadyStock }) {
+export default function ProductAddReadyStock({ setVisible, selectedProduct, getReadyStock, selected }) {
     const [form] = Form.useForm();
     const [receitNumber, setReceitNumber] = useState();
     const [receitCheck, setReceitCheck] = useState(false);
@@ -20,27 +18,34 @@ export default function ProductAddReadyStock({ setVisible, selectedProduct, getR
         if (selectedProduct) {
             values.Id = selectedProduct?.Id;
             let res = await putData(inventory_add_readystock + selectedProduct.Id, values);
+            values.Id = selected?.Id ? selected?.Id : Math.floor(Math.random() * 100000);
+            let url = selected?.Id ? inventory_add_readystock + selected?.Id : inventory_add_readystock;
 
-            if (res) {
-                setVisible(false);
+            if (selected?.Id) {
+                let res = await putData(url, values);
 
-                setTimeout(() => {
-                    getReadyStock();
-                }, 200)
+                if (res) {
+                    setVisible(false);
+
+                    setTimeout(() => {
+                        getReadyStock();
+                    }, 200)
+                }
+            } else {
+                values.Id = Math.floor(Math.random() * 100000);
+                let res = await postData(url, values);
+
+                if (res) {
+                    setVisible(false);
+
+                    setTimeout(() => {
+                        getReadyStock();
+                    }, 200)
+                }
             }
-        } else {
-            values.Id = Math.floor(Math.random() * 100000);
-            let res = await postData(inventory_add_readystock, values);
 
-            if (res) {
-                setVisible(false);
-
-                setTimeout(() => {
-                    getReadyStock();
-                }, 200)
-            }
-        }
-    };
+        };
+    }
 
     const generateBarcode = () => {
         let value = Math.floor(Math.random() * 10000000000);
@@ -72,6 +77,12 @@ export default function ProductAddReadyStock({ setVisible, selectedProduct, getR
     useEffect(() => {
         setReceitNumber(`000_${moment().format('DD-MM-YYYY')}_1`)
     }, [])
+    useEffect(() => {
+        if (selected) {
+            console.log("selected", selected);
+            form.setFieldsValue(selected);
+        }
+    }, [selected])
 
     return (
         <>
@@ -81,7 +92,7 @@ export default function ProductAddReadyStock({ setVisible, selectedProduct, getR
                 initialValues={{
                     net_amount: 1,
                     net_amount_type: "pc",
-                    in_stock: 0, 
+                    in_stock: 0,
                     allow_change_on_edit: 0,
                     low_alert: 0,
                     supply_ppu: 0,
@@ -377,21 +388,21 @@ export default function ProductAddReadyStock({ setVisible, selectedProduct, getR
                                         name="remember"
                                         valuePropName="checked"
                                     >
-                                        <Checkbox onChange={(e) => { setReceitCheck(e.target.checked)}}>Create Receipt</Checkbox>
+                                        <Checkbox onChange={(e) => { setReceitCheck(e.target.checked) }}>Create Receipt</Checkbox>
                                     </Form.Item>
-                                </Col> 
-                           
+                                </Col>
+
                                 <span className={receitCheck ? '' : 'sado-color'} >Receipt no: {receitNumber}</span>
                             </Row>
                         </Card>
                     </Col>
                 </Row>
 
-                
+
                 <Form.Item >
-                <Button type="primary">
-                        Selecet Receipt 
-                </Button>
+                    <Button type="primary">
+                        Selecet Receipt
+                    </Button>
 
                     <Button type="primary" htmlType="submit" style={{ float: 'right' }}>
                         Submit

@@ -1,16 +1,51 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Table, Button, Tabs, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
 import { getData } from '../../../../../scripts/api-service';
 import { sold_root_table_pos } from '../../../../../scripts/api';
+import ExportTable from '../../../../../components/ExportTable/table';
 
 const { Search } = Input;
 const { TextArea } = Input;
 
 export default function POSSellReport() {
+    const generalRef = useRef(null);
     const [form] = Form.useForm();
     const [visible, setVisible] = useState(false);
     const [returnModal, setReturnModal] = useState(false);
     const [posData, setPosData] = useState();
+
+    const exportColums = [
+        {
+            title: 'SL NO.',
+            dataIndex: 'serial_no',
+            key: 'serial_no',
+        },
+        {
+            title: 'Customer Phone Number',
+            dataIndex: 'customer_number',
+            key: 'customer_number',
+        },
+        {
+            title: 'Customer Name',
+            dataIndex: 'customer_name',
+            key: 'customer_name',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+        },
+        {
+            title: 'Amount',
+            dataIndex: 'total_amount',
+            key: 'total_amount',
+        },
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+        }
+    ];
 
     const columns = [
         {
@@ -51,6 +86,7 @@ export default function POSSellReport() {
             ),
         },
     ];
+
     const TableVolumns = [
         {
             title: 'SL NO.',
@@ -92,6 +128,7 @@ export default function POSSellReport() {
             ),
         },
     ];
+
     const onSearch = (value) => console.log(value);
 
     const onFormLayoutChange = ({ layout }) => {
@@ -106,13 +143,32 @@ export default function POSSellReport() {
         }
     }
 
+    const generateReport = () => {
+        generalRef.current.generateReport();
+    }
+
+    const prientReport = () => {
+        generalRef.current.prientReport();
+    }
+
     useEffect(() => {
         getPosData()
     }, [])
 
     return (
         <div>
-            <Search placeholder="input search text mb-4" style={{ width: '400px' }} onSearch={onSearch} enterButton />
+            <Row className='mb-5'>
+                <Col span={8}>
+                    <Search placeholder="input search text mb-4" style={{ width: '400px' }} onSearch={onSearch} enterButton />
+
+                </Col>
+
+                <Col span={8} offset={8}>
+                    <Button type="primary" onClick={() => generateReport()}>Generate Report</Button>
+
+                    <Button type="primary" className='ml-4' onClick={() => prientReport()}>Prient</Button>
+                </Col>
+            </Row>
 
             <Table dataSource={posData} columns={columns} pagination={false} />;
 
@@ -155,7 +211,7 @@ export default function POSSellReport() {
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={8}>
-                            <Form.Item name="remember" valuePropName="checked" 
+                            <Form.Item name="remember" valuePropName="checked"
                                 wrapperCol={{ offset: 8, span: 16 }}>
                                 <Checkbox className='mt-4'>Same As Customer Name</Checkbox>
                             </Form.Item>
@@ -166,7 +222,7 @@ export default function POSSellReport() {
 
                         <Col className="gutter-row" span={24}>
                             <Form.Item label="Customer Address">
-                                <TextArea rows={2} placeholder="maxLength is 6" 
+                                <TextArea rows={2} placeholder="maxLength is 6"
                                     maxLength={6} />
                             </Form.Item>
                         </Col>
@@ -178,12 +234,12 @@ export default function POSSellReport() {
                         </Col>
                         <Col className="gutter-row" span={8}>
                             <Form.Item label="Paid">
-                                <Input placeholder="Paid"  />
+                                <Input placeholder="Paid" />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={8}>
                             <Form.Item label="Due">
-                                <Input placeholder="due"  />
+                                <Input placeholder="due" />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -203,8 +259,8 @@ export default function POSSellReport() {
 
             </Modal>
 
-            <Modal title="Basic Modal" visible={returnModal} footer={false} 
-                onCancel={() => {setReturnModal(false)}}>
+            <Modal title="Basic Modal" visible={returnModal} footer={false}
+                onCancel={() => { setReturnModal(false) }}>
                 <Form
                     layout={"vertical"}
                     form={form}
@@ -233,7 +289,7 @@ export default function POSSellReport() {
 
                         <Col className="gutter-row" span={24}>
                             <Form.Item label="Return Reason">
-                                <TextArea rows={2} placeholder="Return Reason" 
+                                <TextArea rows={2} placeholder="Return Reason"
                                     maxLength={6} />
                             </Form.Item>
                         </Col>
@@ -250,6 +306,10 @@ export default function POSSellReport() {
                     </Row>
                 </Form>
             </Modal>
+
+
+            <ExportTable exportColums={exportColums} ref={generalRef}
+                dataSource={posData}></ExportTable>
         </div>
     )
 }

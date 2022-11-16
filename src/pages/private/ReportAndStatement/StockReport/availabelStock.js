@@ -1,13 +1,58 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Table, Button, Tabs, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
 import { getData } from '../../../../scripts/api-service';
 import { inventory_add_readystock } from '../../../../scripts/api';
+import ExportTable from '../../../../components/ExportTable/table';
 
 export default function AvailabelStock() {
+    const generalRef = useRef(null);
     const [stockData, setStockData] = useState();
     const [totalStockPrice, setTotalStockPrice] = useState(0);
 
     const columns = [
+        {
+            title: 'Product',
+            dataIndex: 'p_name',
+            key: 'p_name',
+        },
+        {
+            title: 'Barcode',
+            dataIndex: 'p_barcode',
+            key: 'p_barcode',
+        },
+        {
+            title: 'In Stock',
+            dataIndex: 'in_stock',
+            key: 'in_stock',
+        },
+        {
+            title: 'Purchase Price',
+            dataIndex: 'net_amount',
+            key: 'net_amount',
+        },
+        {
+            title: 'Selling Price',
+            dataIndex: 'sell_ppu',
+            key: 'sell_ppu',
+        },
+        {
+            title: 'Supplier Price',
+            dataIndex: 'supply_ppu',
+            key: 'supply_ppu',
+        },
+        {
+            title: 'Supplier name',
+            dataIndex: 'supplier',
+            key: 'supplier',
+        },
+        {
+            title: 'Mobile',
+            dataIndex: 'mobile_number',
+            key: 'mobile_number',
+        },
+    ];
+
+    const exportColums = [
         {
             title: 'Product',
             dataIndex: 'p_name',
@@ -62,10 +107,18 @@ export default function AvailabelStock() {
             filter.forEach(n => {
                 total += n.sell_ppu
             });
-            
+
             setTotalStockPrice(total);
             setStockData(filter)
         }
+    }
+
+    const generateReport = () => {
+        generalRef.current.generateReport();
+    }
+
+    const prientReport = () => {
+        generalRef.current.prientReport();
     }
 
     useEffect(() => {
@@ -81,10 +134,20 @@ export default function AvailabelStock() {
                 </Col>
                 <Col className="gutter-row" span={12}>
                     Current Storck Price: {totalStockPrice}
+
+                    <div className="mt-3">
+                        <Button type="primary" onClick={() => generateReport()}>Generate Report</Button>
+
+                        <Button type="primary" className='ml-4' onClick={() => prientReport()}>Prient</Button>
+                    </div>
                 </Col>
             </Row>
 
-            <Table dataSource={stockData} columns={columns} pagination={false}/>;
+            <Table dataSource={stockData} columns={columns} pagination={false} />;
+
+
+      <ExportTable exportColums={exportColums} ref={generalRef}
+        dataSource={stockData}></ExportTable>
         </div>
     )
 }

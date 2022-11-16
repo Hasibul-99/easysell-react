@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Table, Button, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
 import { getData, postData, putData } from '../../../scripts/api-service';
 import { return_products } from '../../../scripts/api';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import ExportTable from '../../../components/ExportTable/table';
 
 export default function ReturnedProducts() {
+    const generalRef = useRef(null);
     const [form] = Form.useForm();
     const [expenses, setExpenses] = useState([]);
     const [allExpenses, setAllExpemses] = useState([]);
@@ -124,6 +126,39 @@ export default function ReturnedProducts() {
         },
     ];
 
+    const exportColums = [
+        {
+            title: 'Serial Number',
+            dataIndex: 'serial_no',
+            key: 'serial_no',
+        },
+        {
+            title: 'Product Name',
+            dataIndex: 'p_name',
+            key: 'p_name',
+        },
+        {
+            title: 'Quantity',
+            dataIndex: 'qty',
+            key: 'qty'
+        },
+        {
+            title: 'Product Rate',
+            key: 'p_rate',
+            dataIndex: 'p_rate'
+        },
+        {
+            title: 'Barcode',
+            key: 'p_barcode',
+            dataIndex: 'p_barcode'
+        },
+        {
+            title: 'Id',
+            dataIndex: 'Id',
+            key: 'id',
+        }
+    ];
+
     const updateExpenses = (item) => {
         form.setFieldsValue({
             amount: item.amount,
@@ -137,6 +172,14 @@ export default function ReturnedProducts() {
 
         setSelectedExpense(item);
         setIsModalBanned(true);
+    }
+
+    const generateReport = () => {
+        generalRef.current.generateReport();
+    }
+
+    const prientReport = () => {
+        generalRef.current.prientReport();
     }
 
     useEffect(() => {
@@ -156,7 +199,7 @@ export default function ReturnedProducts() {
 
             <Card>
                 <Row className='mb-5'>
-                    <Col span={12}>
+                    <Col span={8}>
                         <Form name="horizontal_login" layout="inline" onFinish={onFinishSearch}>
                             <Form.Item
                                 name="user_id"
@@ -184,13 +227,20 @@ export default function ReturnedProducts() {
                             </Form.Item>
                         </Form>
                     </Col>
+
+
+                    <Col span={8} offset={8}>
+                        <Button type="primary" onClick={() => generateReport()}>Generate Report</Button>
+
+                        <Button type="primary" className='ml-4' onClick={() => prientReport()}>Prient</Button>
+                    </Col>
                 </Row>
 
                 <Table columns={columns} dataSource={expenses} scroll={{ x: 900 }} />
             </Card>
 
             <Modal
-                title={ selectedExpense ? 'Update Stuff' : "Stuff Add" }
+                title={selectedExpense ? 'Update Stuff' : "Stuff Add"}
                 visible={isModalBanned}
                 footer={false}
                 onCancel={() => { setIsModalBanned(false); setSelectedExpense(null) }}>
@@ -271,6 +321,10 @@ export default function ReturnedProducts() {
                     </Form.Item>
                 </Form>
             </Modal>
+
+
+            <ExportTable exportColums={exportColums} ref={generalRef}
+                dataSource={expenses}></ExportTable>
         </div>
     )
 }

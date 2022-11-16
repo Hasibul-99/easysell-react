@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import logo from "../../assets/images/logo.png";
 import {
   server, streams, downArrow, streamsAccount, Channels, Lines, video,
@@ -7,13 +7,15 @@ import {
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { Link } from 'react-router-dom';
-import { ShopOutlined, ShoppingOutlined, MoneyCollectOutlined, BoxPlotOutlined,
-  HeatMapOutlined, DatabaseOutlined, ContainerOutlined } from '@ant-design/icons';
-  import { authContext } from "../../context/AuthContext";
+import {
+  ShopOutlined, ShoppingOutlined, MoneyCollectOutlined, BoxPlotOutlined,
+  HeatMapOutlined, DatabaseOutlined, ContainerOutlined
+} from '@ant-design/icons';
+import { authContext } from "../../context/AuthContext";
 
 export default function Leftsidebar() {
-  const {user, setUserInfo, permissions} = useContext(authContext);
-  
+  const { user, setUserInfo, permissions } = useContext(authContext);
+
   return (
     <>
       <nav className="sidebar">
@@ -45,13 +47,13 @@ export default function Leftsidebar() {
               </li>
               <li className="nav-item">
                 <Link to="/custom-sell" className="nav-link">
-                <ShoppingOutlined />
+                  <ShoppingOutlined />
                   <span className="link-title ml-3">Custom Sell</span>
                 </Link>
               </li>
               <li className="nav-item">
                 <Link to="/payments" className="nav-link">
-                <MoneyCollectOutlined />
+                  <MoneyCollectOutlined />
                   <span className="link-title ml-3">Payments</span>
                 </Link>
               </li>
@@ -67,6 +69,7 @@ export default function Leftsidebar() {
                   <span className="link-title ml-3">Report And Statements</span>
                 </Link>
               </li>
+
               <li className="nav-item">
                 <a className="nav-link" data-bs-toggle="collapse" href="#inventory"
                   role="button" aria-expanded="false" aria-controls="inventory">
@@ -78,8 +81,15 @@ export default function Leftsidebar() {
                   <ul className="nav sub-menu">
                     <li className="nav-item">
                       <Link to="/ready-product" className="nav-link">
-                      <DatabaseOutlined />
+                        <DatabaseOutlined />
                         <span className="link-title ml-3">Ready Products</span>
+                      </Link>
+                    </li>
+
+                    <li className="nav-item">
+                      <Link to="/row-products" className="nav-link">
+                        {server}
+                        <span className="link-title ml-3">Raw Product</span>
                       </Link>
                     </li>
                   </ul>
@@ -87,29 +97,37 @@ export default function Leftsidebar() {
               </li>
 
               <li className="nav-item">
-                <Link to="/row-products" className="nav-link">
-                  {server}
-                  <span className="link-title ml-3">Raw Product</span>
-                </Link>
+                <a className="nav-link" data-bs-toggle="collapse" href="#Employee"
+                  role="button" aria-expanded="false" aria-controls="Employee">
+                  <HeatMapOutlined />
+                  <span className="link-title">Employee Management </span>
+                  <i className="link-arrow" data-feather="chevron-down" />
+                </a>
+                <div className="collapse" id="Employee">
+                  <ul className="nav sub-menu">
+                    <li className="nav-item">
+                      <Link to="/suplier_stuff" className="nav-link">
+                        {server}
+                        <span className="link-title ml-3">Staff / Employee</span>
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to="/stuff_section" className="nav-link">
+                        {server}
+                        <span className="link-title ml-3">Staff Section</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </li>
-              <li className="nav-item">
-                <Link to="/suplier_stuff" className="nav-link">
-                  {server}
-                  <span className="link-title ml-3">Supplier Staff</span>
-                </Link>
-              </li>
+
               <li className="nav-item">
                 <Link to="/returned_products" className="nav-link">
                   {server}
                   <span className="link-title ml-3">Returned Products</span>
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link to="/stuff_section" className="nav-link">
-                  {server}
-                  <span className="link-title ml-3">Staff Section</span>
-                </Link>
-              </li>
+
               <li className="nav-item">
                 <Link to="/settings" className="nav-link">
                   {server}

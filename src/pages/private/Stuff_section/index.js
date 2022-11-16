@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Table, Button, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
-import { getData, postData, putData } from '../../../scripts/api-service';
+import { deleteData, getData, postData, putData } from '../../../scripts/api-service';
 import { USERAC, easy_permission_products } from '../../../scripts/api';
 import { Link } from 'react-router-dom';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
+
+const { confirm } = Modal;
 
 export default function StuffSection() {
     const [form] = Form.useForm();
@@ -122,16 +124,35 @@ export default function StuffSection() {
                             onClick={() => {setIsModalExtend(true); setActionLink({...row, idx: index})}}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-server"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
                             <span className="ml-2">Extend</span></a> */}
-                            {/* <a className="dropdown-item d-flex align-items-center" onClick={() => showDeleteConfirm({...row, idx: index})}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-trash icon-sm me-2"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg> 
-                            <span className>Delete</span>
-                          </a> */}
+                            <a className="dropdown-item d-flex align-items-center" 
+                            onClick={() => deleteExpenses(item)}
+                            >
+                            {/* <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-trash icon-sm me-2"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>  */}
+                            <span className="ml-2">Delete</span>
+                          </a>
                         </div>
                     </div>
                 </>
             )
         },
     ];
+
+    const deleteExpenses = (item) => {
+        confirm({
+            title: 'Do you Want to delete these items?',
+            icon: <ExclamationCircleOutlined />,
+            onOk() {
+                deleteData(USERAC + item.Id).then(res => {
+                    if (res) {
+                        getExpensess();
+                    }
+                })
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    }
 
     const updateExpenses = (item) => {
         form.setFieldsValue({
@@ -189,7 +210,7 @@ export default function StuffSection() {
         <div className='page-content'>
             <Row className='mb-5'>
                 <Col span={12}>
-                    <h3>Stuff</h3>
+                    <h3>Staff</h3>
                 </Col>
                 <Col span={12} className='text-right' style={{ textAlign: "end" }}>
                     <Button type="primary" onClick={() => setIsModalBanned(true)}>Add Stuff</Button>

@@ -37,3 +37,7 @@ export const vendor_list = "vendor_list/"
 export const vendor_list_readyProduct = "vendor_list_ready_distinct/"
 export const vendor_list_rowProduct = "vendor_list_row_distinct/"
 
+export const vendor_list_payment_readyProduct = "vendor_list_payment_readyProduct/"
+
+//
+

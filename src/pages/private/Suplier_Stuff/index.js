@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Table, Button, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
-import { getData, postData, putData } from '../../../scripts/api-service';
-import { SUPLIER_STUFF } from '../../../scripts/api';
+import { deleteData, getData, postData, putData } from '../../../scripts/api-service';
+import { SUPLIER_STUFF, USERAC } from '../../../scripts/api';
 import { Link } from 'react-router-dom';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
+const { confirm } = Modal;
+
+const { Option } = Select;
 export default function SuplierStuff() {
     const [form] = Form.useForm();
     const [expenses, setExpenses] = useState([]);
@@ -13,6 +16,7 @@ export default function SuplierStuff() {
     const [actionLInk, setActionLink] = useState();
     const [isModalBanned, setIsModalBanned] = useState(false);
     const [selectedExpense, setSelectedExpense] = useState();
+    const [staffs, setStaffs] = useState();
 
     const getExpensess = async () => {
         let res = await getData(SUPLIER_STUFF);
@@ -116,8 +120,11 @@ export default function SuplierStuff() {
                         <div className="dropdown-menu" aria-labelledby="dropdownMenuButton3">
                             <a className="dropdown-item d-flex align-items-center" href="javascript:;"
                                 onClick={() => { updateExpenses(item) }}>
-                                {/* <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="feather feather-slash"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg> */}
                                 <span className="ml-2">Edit</span>
+                            </a>
+                            <a className="dropdown-item d-flex align-items-center" href="javascript:;"
+                                onClick={() => { DeleteExpenses(item) }}>
+                                <span className="ml-2">Delete</span>
                             </a>
                             {/* <a className="dropdown-item d-flex align-items-center" href="javascript:;"
                             onClick={() => {setIsModalExtend(true); setActionLink({...row, idx: index})}}>
@@ -126,7 +133,7 @@ export default function SuplierStuff() {
                             {/* <a className="dropdown-item d-flex align-items-center" onClick={() => showDeleteConfirm({...row, idx: index})}>
                             <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-trash icon-sm me-2"><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg> 
                             <span className>Delete</span>
-                          </a> */}
+                          </a>*/}
                         </div>
                     </div>
                 </>
@@ -134,13 +141,22 @@ export default function SuplierStuff() {
         },
     ];
 
+    const getStaffList = async () => {
+        let res = await getData(USERAC);
+
+        if (res) {
+            let masterData = res?.data;
+            setStaffs(masterData)
+        }
+    }
+
     const updateExpenses = (item) => {
         form.setFieldsValue({
             amount: item.amount,
             due: item.due,
             e_no: item.e_no,
             paid: item.paid,
-            e_reason: item.e_reason,
+            reason: item.reason,
             s_name: item.s_name,
             status: item.status
         });
@@ -149,18 +165,36 @@ export default function SuplierStuff() {
         setIsModalBanned(true);
     }
 
+    const DeleteExpenses = (item) => {
+        confirm({
+            title: 'Do you Want to delete these items?',
+            icon: <ExclamationCircleOutlined />,
+            onOk() {
+                deleteData(SUPLIER_STUFF + item.e_no).then(res => {
+                    if (res) {
+                        getStaffList();
+                    }
+                })
+            },
+            onCancel() {
+                console.log('Cancel');
+            },
+        });
+    }
+
     useEffect(() => {
-        getExpensess()
+        getExpensess();
+        getStaffList()
     }, [])
 
     return (
         <div className='page-content'>
             <Row className='mb-5'>
                 <Col span={12}>
-                    <h3>Stuff</h3>
+                    <h3>Staff</h3>
                 </Col>
                 <Col span={12} className='text-right' style={{ textAlign: "end" }}>
-                    <Button type="primary" onClick={() => setIsModalBanned(true)}>Add Stuff</Button>
+                    <Button type="primary" onClick={() => setIsModalBanned(true)}>New Staff Expence</Button>
                 </Col>
             </Row>
 
@@ -200,7 +234,7 @@ export default function SuplierStuff() {
             </Card>
 
             <Modal
-                title={ selectedExpense ? 'Update Stuff' : "Stuff Add" }
+                title={selectedExpense ? 'Update Staff' : "Staff Add"}
                 visible={isModalBanned}
                 footer={false}
                 onCancel={() => { setIsModalBanned(false); setSelectedExpense(null) }}>
@@ -224,18 +258,58 @@ export default function SuplierStuff() {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Select className='w-100'
+                                    showSearch
+                                    placeholder="Search to Select"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    {
+                                        staffs?.length && staffs.map(item => <Option value={item.Name}>
+                                            {item.Name}
+                                        </Option>)
+                                    }
+                                </Select>
                             </Form.Item>
                         </Col>
 
                         <Col className="gutter-row" span={12}>
                             <Form.Item
-                                label="Salary"
+                                label="Reason"
+                                name="reason"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input reason!',
+                                    },
+                                ]}
+                            >
+                                <Select className='w-100'
+                                    showSearch
+                                    placeholder="Search to Select"
+                                    optionFilterProp="children"
+                                    filterOption={(input, option) =>
+                                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    }
+                                >
+                                    <Option value="Salary">Salary</Option>
+                                    <Option value="Loan">Loan</Option>
+                                    <Option value="Allowence">Allowence</Option>
+                                    <Option value="Other">Other</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+
+                        <Col className="gutter-row" span={12}>
+                            <Form.Item
+                                label="Amount"
                                 name="amount"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input amount!',
+                                        message: 'Please input Amount!',
                                     },
                                 ]}
                             >

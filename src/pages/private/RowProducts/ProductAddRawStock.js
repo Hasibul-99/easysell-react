@@ -286,7 +286,7 @@ export default function ProductAddRawStock({ setVisible, getReadyStock }) {
                     </Button>
                     <Button type="primary" onClick={() => setVisible(false)}
                         danger ghost style={{ float: 'right', marginRight: '1rem' }}>
-                        Danger
+                        Cancel
                     </Button>
                 </Form.Item>
             </Form>

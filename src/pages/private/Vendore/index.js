@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Table, Select, Input, Space, Button, Modal, Form, InputNumber } from 'antd';
-import { vendor_list, vendor_list_readyProduct, vendor_list_rowProduct } from '../../../scripts/api';
-import { getData } from '../../../scripts/api-service';
+import { vendor_list, vendor_list_payment_readyProduct, vendor_list_readyProduct, vendor_list_rowProduct } from '../../../scripts/api';
+import { getData, postData, putData } from '../../../scripts/api-service';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import moment from 'moment';
 
 const { Option } = Select;
 
@@ -11,6 +12,9 @@ export default function Vendore() {
     const [type, setType] = useState("1");
     const [product, setProduct] = useState();
     const [vendor, setVendor] = useState();
+    const [selectedProduct, setSelectedProduct] = useState();
+    const [showHistory, setShowHistory] = useState(false);
+    const [historyProduct, setHistoryProduct] = useState()
 
     const columns = [
         {
@@ -30,8 +34,8 @@ export default function Vendore() {
         },
         {
             title: 'Amount',
-            dataIndex: 'sell_rate',
-            key: 'sell_rate',
+            dataIndex: 'amount',
+            key: 'amount',
         },
         {
             title: 'Paid',
@@ -49,6 +53,63 @@ export default function Vendore() {
             key: 'date',
         },
     ];
+
+    const secondColumns = [
+        {
+            title: 'Receipt',
+            dataIndex: 'parent_id',
+            key: 'parent_id',
+        },
+        {
+            title: 'Barcode',
+            dataIndex: 'barcode',
+            key: 'barcode',
+        },
+        {
+            title: 'Product Name',
+            dataIndex: 'product_name',
+            key: 'product_name',
+        },
+        {
+            title: 'Buy Rate',
+            dataIndex: 'buy_rate',
+            key: 'buy_rate',
+        },
+        {
+            title: 'Quantity',
+            dataIndex: 'qty',
+            key: 'qty',
+        },
+        {
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'amount',
+        },
+    ]
+
+    const historyProductColumns = [
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+        },
+        {
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'amount',
+        },
+        {
+            title: 'Paid',
+            dataIndex: 'paid',
+            key: 'paid',
+        },
+        {
+            title: 'Due',
+            dataIndex: 'due',
+            key: 'due',
+        },
+
+    ]
 
     const VendorColumns = [
         {
@@ -71,8 +132,21 @@ export default function Vendore() {
         },
     ];
 
-    const updateStock = () => {
+    const updateStock = (data) => {
+        if (data) {
+            setSelectedProduct(data);
 
+            form.setFieldsValue({
+                parent_id: data?.parent_id,
+                vendor_name: data?.vendor_name,
+                mobile_number: data.mobile_number,
+                amount: data.amount,
+                previous_paid: data.paid,
+                total_paid: data.paid,
+                paid: data.due,
+                due: 0
+            })
+        }
     }
 
     const getProductData = async () => {
@@ -93,8 +167,51 @@ export default function Vendore() {
         }
     }
 
-    const onFinish = async () => {
+    const onFinish = async (data) => {
+        let allData = { ...data };
+        allData.previous_paid = allData.previous_paid + allData.paid;
+        allData.due = allData.amount - allData.previous_paid;
+        let info = { ...selectedProduct, ...allData };
 
+        if (type === "1") {
+            // let res = await putData(vendor_list_readyProduct, info);
+
+            let res2 = await postData(vendor_list_payment_readyProduct, {
+                Id: selectedProduct.Id,
+                payment_parent: selectedProduct.parent_id,
+                amount: selectedProduct.amount,
+                paid: allData.paid,
+                due: allData.due,
+                date: moment().format("DD/MM/YYYY hh:mm:ss")
+            });
+
+            if (res2) {
+                form.resetFields();
+                getProductData();
+            }
+        }
+    }
+
+    const handelPaid = () => {
+        let values = form.getFieldsValue();
+
+        let total = (values.previous_paid || 0) + (values.paid || 0);
+        let due = (values.amount || 0) - (total || 0);
+
+        form.setFieldsValue({
+            due: due,
+            total_paid: total
+        })
+    }
+
+    const getHistory = async () => {
+        let res = await getData(vendor_list_payment_readyProduct + selectedProduct.Id);
+
+        if (res) {
+            let masterData =  res.data;
+            setHistoryProduct([masterData]);
+            console.log("masterData", masterData);
+        }
     }
 
     useEffect(() => {
@@ -143,7 +260,7 @@ export default function Vendore() {
                                 <Col className="gutter-row" span={24}>
                                     <Form.Item
                                         label="Receipt No"
-                                        name="p_barcode"
+                                        name="parent_id"
                                         rules={[
                                             {
                                                 required: true,
@@ -151,13 +268,13 @@ export default function Vendore() {
                                             },
                                         ]}
                                     >
-                                        <Input />
+                                        <Input disabled/>
                                     </Form.Item>
                                 </Col>
                                 <Col className="gutter-row" span={12}>
                                     <Form.Item
                                         label="Supplier Name"
-                                        name="p_barcode"
+                                        name="vendor_name"
                                         rules={[
                                             {
                                                 required: true,
@@ -172,7 +289,7 @@ export default function Vendore() {
                                 <Col className="gutter-row" span={12}>
                                     <Form.Item
                                         label="Supplier Number"
-                                        name="p_barcode"
+                                        name="mobile_number"
                                         rules={[
                                             {
                                                 required: true,
@@ -187,7 +304,7 @@ export default function Vendore() {
                                 <Col className="gutter-row" span={12}>
                                     <Form.Item
                                         label="Amount"
-                                        name="p_barcode"
+                                        name="amount"
                                         rules={[
                                             {
                                                 required: true,
@@ -195,14 +312,28 @@ export default function Vendore() {
                                             },
                                         ]}
                                     >
-                                        <Input />
+                                        <InputNumber style={{ width: "100%" }} disabled />
+                                    </Form.Item>
+                                </Col>
+                                <Col className="gutter-row" span={12}>
+                                    <Form.Item
+                                        label="Previous Paid"
+                                        name="previous_paid"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please input Product Barcode!',
+                                            },
+                                        ]}
+                                    >
+                                        <InputNumber style={{ width: "100%" }} disabled />
                                     </Form.Item>
                                 </Col>
 
                                 <Col className="gutter-row" span={12}>
                                     <Form.Item
-                                        label="Paid"
-                                        name="p_barcode"
+                                        label="New Paid"
+                                        name="paid"
                                         rules={[
                                             {
                                                 required: true,
@@ -210,14 +341,30 @@ export default function Vendore() {
                                             },
                                         ]}
                                     >
-                                        <Input />
+                                        <InputNumber style={{ width: "100%" }} onChange={handelPaid} />
                                     </Form.Item>
                                 </Col>
+
+                                <Col className="gutter-row" span={12}>
+                                    <Form.Item
+                                        label="Total Paid"
+                                        name="total_paid"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Please input Product Barcode!',
+                                            },
+                                        ]}
+                                    >
+                                        <InputNumber style={{ width: "100%" }} disabled />
+                                    </Form.Item>
+                                </Col>
+
 
                                 <Col className="gutter-row" span={12}>
                                     <Form.Item
                                         label="Due"
-                                        name="p_barcode"
+                                        name="due"
                                         rules={[
                                             {
                                                 required: true,
@@ -225,7 +372,7 @@ export default function Vendore() {
                                             },
                                         ]}
                                     >
-                                        <Input />
+                                        <InputNumber style={{ width: "100%" }} disabled />
                                     </Form.Item>
                                 </Col>
                             </Row>
@@ -234,16 +381,33 @@ export default function Vendore() {
                                 <Button type="primary" htmlType="submit" style={{ float: 'right' }}>
                                     Save
                                 </Button>
+
+                                <Button type="primary" className='mr-5' onClick={() => { setShowHistory(true); getHistory() }}>
+                                    History
+                                </Button>
+
+                                <Button type="primary" onClick={() => { form.resetFields() }}>
+                                    Cancel
+                                </Button>
                             </Form.Item>
                         </Form>
 
-                        <Table dataSource={product} columns={columns} scroll={{
+                        <Table dataSource={product} columns={secondColumns} scroll={{
                             y: 300,
-                            x: '100vw',
+                            x: '80vw',
                         }} pagination={false} />
                     </Card>
                 </Col>
             </Row>
+
+            <Modal
+                title="History"
+                open={showHistory}
+                onCancel={() => setShowHistory(false)}
+                footer={false}>
+
+                <Table dataSource={historyProduct} columns={historyProductColumns}  pagination={false} />
+            </Modal>
         </div>
     )
 }

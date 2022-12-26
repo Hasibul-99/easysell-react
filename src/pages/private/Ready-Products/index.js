@@ -9,6 +9,7 @@ import { deleteData, getData } from "../../../scripts/api-service";
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import ExportTable from '../../../components/ExportTable/table';
 import { alertPop } from '../../../scripts/helper';
+import { Link } from 'react-router-dom';
 
 const { Search } = Input;
 const { confirm } = Modal;
@@ -281,7 +282,7 @@ export default function ReadyProducts() {
                     </Col>
                     <Col className="gutter-row text-right" span={16}>
                         <Space style={{ textAlign: 'right' }}>
-                            <Button type="primary">Add Custome Sell Product</Button>
+                            <Button type="primary"><Link to="/add-custome-sell-report">Add Custome Sell Product</Link></Button>
                             <Button type="primary" onClick={() => setVisible(true)}>Add Ready Product</Button>
                             {/* <Button type="primary">Add From Production</Button> */}
                         </Space>

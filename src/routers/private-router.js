@@ -17,6 +17,7 @@ import ReturnedProducts from "../pages/private/returned-products";
 import Settings from "../pages/private/Settings";
 import RowProducts from "../pages/private/RowProducts";
 import Vendore from "../pages/private/Vendore";
+import AddCustomeSellReport from "../pages/private/RowProducts/AddCustomeSellReport";
 
 const PrivateRoutes = [
     {
@@ -30,6 +31,13 @@ const PrivateRoutes = [
         path: "ready-product",
         name: "Ready Products",
         component: ReadyProducts,
+        layout: "/",
+        exact: true
+    },
+    {
+        path: "add-custome-sell-report",
+        name: "Custome Sell Products",
+        component: AddCustomeSellReport,
         layout: "/",
         exact: true
     },

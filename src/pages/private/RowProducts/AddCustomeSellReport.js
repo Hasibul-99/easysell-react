@@ -35,6 +35,10 @@ export default function AddCustomeSellReport() {
             )
         },
     ];
+
+    const updateExpenses = (item) => {
+
+    }
   return (
     <div className='page-content'>
         <Card>

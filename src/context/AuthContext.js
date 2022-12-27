@@ -29,8 +29,8 @@ const AuthContext = props => {
             let pre = await getData(easy_permission_products + user.userId);
 
             if (pre) {
-                let masterData = res?.data;
-                setPermissions(masterData);
+                let masterData1 = pre?.data;
+                setPermissions(masterData1);
             }
 
             let perVal = await getData(PERMANENT_VALUES);

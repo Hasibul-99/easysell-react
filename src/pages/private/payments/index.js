@@ -282,6 +282,7 @@ export default function Payments() {
           name="basic"
           onFinish={onFinish}
           autoComplete="off"
+          initialValues={{due: 0}}
         >
 
           <Row gutter={16}>

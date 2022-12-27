@@ -73,7 +73,13 @@ export default function POS() {
 
         let items = allStocks.filter(item => val.length === 0 || item?.p_name.toLowerCase().includes(val));
         setStocks(items);
+    }
 
+    const onSearchBarcode = (value) => {
+        let val = value.toLowerCase();
+
+        let items = allStocks.filter(item => val.length === 0 || item?.p_barcode.toLowerCase().includes(val));
+        setStocks(items);
     }
 
     const getReadyStock = async () => {
@@ -178,7 +184,14 @@ export default function POS() {
                                 <Search placeholder="input search text" onSearch={onSearch} enterButton />
                             </Col>
                             <Col className="gutter-row" span={12}>
-                                <Input addonBefore="Barcode" />
+                                {/* <Input addonBefore="Barcode" /> */}
+                                <Search
+                                    addonBefore="Barcode"
+                                    placeholder="Search barcode"
+                                    allowClear
+                                    onSearch={onSearchBarcode}
+                                    style={{ width: 304 }}
+                                />
                             </Col>
                         </Row>
 

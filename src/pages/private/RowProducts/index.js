@@ -84,7 +84,6 @@ const exportColums = [
 export default function RowProducts() {
     const generalRef = useRef(null);
     const [visible, setVisible] = useState(false);
-    const onSearch = (value) => console.log(value);
     const [stocks, setStocks] = useState([]);
     const [selected, setSelected] = useState();
 
@@ -180,6 +179,14 @@ export default function RowProducts() {
         },
     ];
 
+    const onSearch = (value) => {
+        if (value) {
+            let filter = stocks.filter(e => e.p_name === value );
+            setStocks(filter);
+        } else {
+            getReadyStock();
+        }
+    };
 
     const updateProduct = (item) => {
         setSelected(item);

@@ -98,7 +98,14 @@ export default function ReadyProducts() {
     const [stocks, setStocks] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState();
 
-    const onSearch = (value) => console.log(value);
+    const onSearch = (value) => {
+        if (value) {
+            let filter = stocks.filter(e => e.p_name === value );
+            setStocks(filter);
+        } else {
+            getReadyStock();
+        }
+    };
 
     const columns = [
         {

@@ -9,7 +9,7 @@ import { authContext } from "../../context/AuthContext";
 import avetar from "../../assets/images/avatar-1.png";
 
 export default function Navbar() {
-    const {user, setUserInfo, permissions} = useContext(authContext);
+    const {user, setUserInfo, theme, permissions} = useContext(authContext);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const logoutUser = () => {
@@ -31,7 +31,7 @@ export default function Navbar() {
     }, [])
 
   return (
-    <nav className="navbar">
+    <nav className="navbar" style={theme ? { background: theme.dv_topbar_bg_color, color: theme.dv_topbar_fg_color } : {}}>
         <a href="#" className="sidebar-toggler">
             {menu}
         </a>

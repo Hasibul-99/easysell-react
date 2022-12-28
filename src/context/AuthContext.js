@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { easy_permission_products, PERMANENT_VALUES, USER_INFO } from "../scripts/api";
+import { easy_permission_products, PERMANENT_VALUES, theme_color, USER_INFO } from "../scripts/api";
 import { getData } from '../scripts/api-service';
 import Cookies from "js-cookie";
 
@@ -9,6 +9,7 @@ const AuthContext = props => {
     const [user, setUser] = useState();
     const [permissions, setPermissions] = useState();
     const [permanetValues, setPermanetValues] = useState();
+    const [theme, setTheme] = useState()
 
     useEffect(() => {
         setUser();
@@ -37,6 +38,14 @@ const AuthContext = props => {
             if (perVal) {
                 let masterData = perVal.data[0];
                 setPermanetValues(masterData);
+
+                let themes = await getData(theme_color);
+
+                if (themes) {
+                    let masterDataT = themes?.data || [];
+                    let the = masterDataT.find(item => item.theme_name === masterData.THEME_NAME);
+                    setTheme(the);
+                }
             }
         }
     }
@@ -57,7 +66,8 @@ const AuthContext = props => {
                 getUserInfo,
                 DeleteUserInfo,
                 permissions,
-                permanetValues
+                permanetValues,
+                theme
             }}>
             {props.children}
         </authContext.Provider>

@@ -14,14 +14,12 @@ import {
 import { authContext } from "../../context/AuthContext";
 
 export default function Leftsidebar() {
-  const { user, setUserInfo, permissions } = useContext(authContext);
-
-  console.log("permissions", permissions);
+  const { user, setUserInfo, theme, permissions } = useContext(authContext);
 
   return (
     <>
       <nav className="sidebar">
-        <div className="sidebar-header">
+        <div className="sidebar-header" style={theme ? { background: theme.dv_topbar_bg_color, color: theme.dv_topbar_fg_color } : {}}>
           <a href="#" className="sidebar-brand">
             {/* Noble<span>UI</span> */}
             <img src={logo} />
@@ -32,7 +30,8 @@ export default function Leftsidebar() {
             <span />
           </div>
         </div>
-        <div className="sidebar-body">
+        <div className="sidebar-body" 
+          style={theme ? { background: theme.dv_bg_color } : {}}>
           <PerfectScrollbar>
             <ul className="nav">
               {(!permissions || permissions?.dashboard === 1) ? <>

@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Table, Button, Card, Checkbox, Row, Col, Select, Input, Form, Modal } from 'antd';
 import { getData, postData, putData } from '../../../scripts/api-service';
-import { EXPENSES } from '../../../scripts/api';
+import { EXPENSES, USERAC } from '../../../scripts/api';
 import { Link } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import ExportTable from '../../../components/ExportTable/table';
+
+const { Option } = Select;
 
 export default function Expense() {
   const generalRef = useRef(null);
@@ -15,6 +17,7 @@ export default function Expense() {
   const [actionLInk, setActionLink] = useState();
   const [isModalBanned, setIsModalBanned] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState();
+  const [approved, setApproved] = useState([])
 
   const getExpensess = async () => {
     let res = await getData(EXPENSES);
@@ -34,7 +37,7 @@ export default function Expense() {
 
     if (selectedExpense) {
       let res = await putData(EXPENSES + selectedExpense.Id, values);
-      
+
       if (res) {
         getExpensess();
         form.resetFields();
@@ -186,7 +189,7 @@ export default function Expense() {
       )
     },
   ];
-  
+
   const updateExpenses = (item) => {
     form.setFieldsValue({
       amount: item.amount,
@@ -211,8 +214,17 @@ export default function Expense() {
     generalRef.current.prientReport();
   }
 
+  const getUserList = async () => {
+    let res = await getData(USERAC);
+
+    if (res) {
+      setApproved(res?.data || []);
+    }
+  }
+
   useEffect(() => {
-    getExpensess()
+    getExpensess();
+    getUserList()
   }, [])
 
   return (
@@ -278,8 +290,9 @@ export default function Expense() {
           name="basic"
           onFinish={onFinish}
           autoComplete="off"
+          initialValues={{ due: 0 }}
         >
-          
+
           <Row gutter={16}>
             <Col className="gutter-row" span={12}>
               <Form.Item
@@ -361,11 +374,14 @@ export default function Expense() {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input bill_by!',
+                    message: 'Please input Approved By!',
                   },
                 ]}
               >
-                <Input />
+                <Select
+                >
+                  { approved?.length ? approved.map(item => <Option value={item.Name}>{item.Name}</Option> ) : null }
+                </Select>
               </Form.Item>
             </Col>
           </Row>

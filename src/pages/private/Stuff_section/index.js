@@ -84,7 +84,7 @@ export default function StuffSection() {
     const onFinishSearch = (values) => {
         console.log('Success:', values);
         if (values.user_id) {
-            let filter = allExpenses.filter(e => e.e_no == values.user_id);
+            let filter = allExpenses.filter(e => e.Name === values.user_id);
             setExpenses(filter);
         } else {
             setExpenses(allExpenses);
@@ -251,7 +251,7 @@ export default function StuffSection() {
                                 name="user_id"
                                 rules={[{ required: false, message: 'Please input your user ID' }]}
                             >
-                                <Input placeholder="Search by number" />
+                                <Input placeholder="Search by Name" />
                             </Form.Item>
 
                             <Form.Item shouldUpdate>

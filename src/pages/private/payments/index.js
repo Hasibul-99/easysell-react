@@ -58,9 +58,8 @@ export default function Payments() {
   };
 
   const onFinishSearch = (values) => {
-    console.log('Success:', values);
     if (values.user_id) {
-      let filter = allExpenses.filter(e => e.e_no == values.user_id);
+      let filter = allExpenses.filter(e => e.serial_no == values.user_id);
       setExpenses(filter);
     } else {
       setExpenses(allExpenses);

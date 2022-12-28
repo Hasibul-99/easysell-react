@@ -209,7 +209,7 @@ export default function StuffSection() {
 
         if (res) {
             let master = res?.data || [];
-            let data = master?.length ? master[0] : {};
+            let data = master?.length ? {...master[0]} : {};
 
             delete data.number;
             setPermissions(data);

@@ -9,6 +9,7 @@ import { getData, deleteData } from "../../../scripts/api-service";
 import ExportTable from '../../../components/ExportTable/table';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { alertPop } from '../../../scripts/helper';
+import AddCustomeSellReport from './AddCustomeSellReport';
 
 const { Search } = Input;
 const { confirm } = Modal;
@@ -84,6 +85,7 @@ const exportColums = [
 export default function RowProducts() {
     const generalRef = useRef(null);
     const [visible, setVisible] = useState(false);
+    const [visibleCustomeSellProduct, setVisibleCustomeSellProduct] = useState(false);
     const [stocks, setStocks] = useState([]);
     const [selected, setSelected] = useState();
 
@@ -242,9 +244,11 @@ export default function RowProducts() {
                     </Col>
                     <Col className="gutter-row text-right" span={16}>
                         <Space style={{ textAlign: 'right' }}>
-                            <Button type="primary"
-                                onClick={() => setVisible(true)}>Add Custome Sell Product</Button>
-                            <Button type="primary">Update/Add Product</Button>
+                            <Button type="primary" onClick={() => setVisibleCustomeSellProduct(true)}>
+                                Add Custome Sell Product
+                            </Button>
+                            <Button type="primary" 
+                                onClick={() => setVisible(true)}>Add Product</Button>
                             {/* <Button type="primary">Add From Production</Button> */}
                         </Space>
                         <div className='mt-3'>
@@ -277,6 +281,19 @@ export default function RowProducts() {
                 <ProductAddRawStock
                     setVisible={setVisible}
                     getReadyStock={getReadyStock} selected={selected} />
+            </Modal>
+
+            <Modal
+                title="Add Custome Sell Product"
+                centered
+                visible={visibleCustomeSellProduct}
+                footer={false}
+                width={1000}
+                onCancel={() => { setVisibleCustomeSellProduct(false); setSelected(null) }}
+            >
+                <AddCustomeSellReport
+                    setVisibleCustomeSellProduct={setVisibleCustomeSellProduct}
+                    getReadyStock={getReadyStock} selected={selected} stocks={stocks} />
             </Modal>
 
             <ExportTable exportColums={exportColums} ref={generalRef}

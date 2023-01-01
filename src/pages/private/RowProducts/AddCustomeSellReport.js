@@ -1,56 +1,154 @@
-import { Card, Col, Row, Table } from 'antd'
+import { Card, Col, Row, Table, Form, Input, Button } from 'antd'
 import React, { useState } from 'react'
 
-export default function AddCustomeSellReport() {
+export default function AddCustomeSellReport({ stocks }) {
+    const [form] = Form.useForm();
+
     const [products, setProducts] = useState();
 
     const columns = [
         {
-            title: 'Product Name',
+            title: 'Name',
             dataIndex: 'p_name',
             key: 'p_name',
         },
         {
-            title: 'Sold Rate',
-            dataIndex: 'p_code',
-            key: 'p_code',
+            title: 'Available',
+            dataIndex: 'in_stock',
+            key: 'in_stock',
         },
         {
-            title: 'ACTION',
-            key: 'address',
-            render: (item, row, index) => (
-                <>
-                    <div className="dropdown">
-                        <button className="btn p-0" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="feather feather-more-horizontal icon-lg text-muted pb-3px"><circle cx={12} cy={12} r={1} /><circle cx={19} cy={12} r={1} /><circle cx={5} cy={12} r={1} /></svg>
-                        </button>
-                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                            <a className="dropdown-item d-flex align-items-center" href="javascript:;"
-                                onClick={() => { updateExpenses(item) }}>
-                                <span className="ml-2">Edit</span>
-                            </a>
-                        </div>
-                    </div>
-                </>
-            )
+            title: 'Rate',
+            key: 'sell_ppu',
+            dataIndex: 'sell_ppu',
         },
     ];
 
-    const updateExpenses = (item) => {
+    const generateBarcode = () => {
+        let value = Math.floor(Math.random() * 10000000000);
+        form.setFieldsValue({ p_barcode: value });
+    };
+
+    const onFinish = (values) => {
 
     }
-  return (
-    <div className='page-content'>
-        <Card>
-            <Row gutter={16}>
-                <Col className="gutter-row" span={8}>
-                <Table columns={columns} dataSource={products} />
-                </Col>
-                <Col className="gutter-row" span={16}>
+    return (
+        <div className='page-content'>
+            <Card>
+                <Form
+                    layout={"vertical"}
+                    form={form}
+                    onFinish={onFinish}
+                >
+                    <Row gutter={16}>
+                        <Col className="gutter-row" span={12}>
+                            <Form.Item
+                                label="Product Name"
+                                name="p_name"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input Product Name!',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
 
-                </Col>
-            </Row>
-        </Card>
-    </div>
-  )
+                        <Col className="gutter-row" span={9}>
+                            <Form.Item
+                                label="Product Barcode"
+                                name="p_barcode"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input Product Barcode!',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col className="gutter-row" span={3}>
+                            <Button type="primary" style={{ marginTop: '2rem' }}
+                                onClick={generateBarcode}>generate</Button>
+                        </Col>
+
+                        <Col className="gutter-row" span={12}>
+                            <Form.Item
+                                label="Product Code"
+                                name="p_code"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input Product Code!',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col className="gutter-row" span={6}>
+                            <Form.Item
+                                label="Net Amount"
+                                name="net_amount"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input net amount!',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col className="gutter-row" span={6}>
+                            <Form.Item
+                                label="Unit"
+                                name="unit"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input unit!',
+                                    },
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                </Form>
+            </Card>
+
+            <Card>
+                <Row gutter={16}>
+                    <Col className="gutter-row" span={8}>
+                        <Table columns={columns} dataSource={stocks} pagination={false} />
+                    </Col>
+                    <Col className="gutter-row" span={8}>
+                        <div className='mb-1'>
+                            <label>Row Product:</label>
+                        </div>
+                        <br />
+                        <div className='mb-1'>
+                            <lable>Quantity</lable>
+                            <Input />
+                        </div>
+                        <br />
+                        <div className='mb-1'>
+                            <lable>Left in Stock: </lable>
+                        </div>
+                        <br />
+                        <div className='mb-1'>
+                            <lable>Cost: </lable>
+                        </div>
+                    </Col>
+                    <Col className="gutter-row" span={8}>
+                        <Table columns={columns} dataSource={stocks} pagination={false} />
+                    </Col>
+                </Row>
+            </Card>
+        </div>
+    )
 }
